@@ -34,8 +34,7 @@
 2.  ##### 树形控件BaseTree:
     | 参数 | 类型 | 默认值 | 说明 |
     |--|--|--|--|
-    | el-tree-attrs | object | { <br/>&ensp;nodeKey: "id",<br/>&ensp;parentKey: "pid",<br/>&ensp;showCheckbox: true,<br/>
-     &ensp;showCheckbox: true,<br/>&ensp;checkOnClickNode: true,<br/>&ensp;checkStrictly: true,<br/>&ensp;expandOnClickNode: false,<br/>&ensp;draggable: false,<br/>&ensp;defaultCheckedKeys: [],<br/>&ensp;defaultExpandedKeys: [],<br/>&ensp;props: {},<br/>&ensp;filterNodeMethod: ...,<br/>&ensp;load: ...<br/>} | elementUI el-tree的配置参数，预置了一些默认值，可自行修改 |
+    | el-tree-attrs | object | { <br/>&ensp;nodeKey: "id",<br/>&ensp;parentKey: "pid",<br/>&ensp;showCheckbox: true,<br/>&ensp;showCheckbox: true,<br/>&ensp;checkOnClickNode: true,<br/>&ensp;checkStrictly: true,<br/>&ensp;expandOnClickNode: false,<br/>&ensp;draggable: false,<br/>&ensp;defaultCheckedKeys: [],<br/>&ensp;defaultExpandedKeys: [],<br/>&ensp;props: {},<br/>&ensp;filterNodeMethod: ...,<br/>&ensp;load: ...<br/> } | elementUI el-tree的配置参数，预置了一些默认值，可自行修改 |
     | itemProp | object | { value: "id", label: "name" } | 下拉选项主键、显示文本配置，例：{ value: "id", label: "name" } |
     | remoteFunc | function | - | 调用远端服务器的接口函数，需返回Promise |
     | remoteParams | - | - | 调用接口参数 |
