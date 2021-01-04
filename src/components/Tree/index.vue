@@ -521,28 +521,28 @@ export default {
 
     // 懒加载搜索
     onSearch(keyword) {
-      // if (!this.treeProp.lazy) this.$refs.tree.filter(keyword);
-      // else {
-      this.refresh = true;
+      if (!this.treeProp.lazy) this.$refs.tree.filter(keyword);
+      else {
+        this.refresh = true;
 
-      this.$nextTick(() => {
-        this.treeProp.load = (node, resolve)=> {
-          const pid = node.parent ? node.data[this.treeProp.nodeKey] : 0;
-          let params = { pid };
-          if (keyword && !pid) {
-            params = { [this.ElTreeAttrs.props.label]: keyword };
-          }
-          this.getData(params, resolve).then(() => {
-            console.log(this.treeProp.load);
-            // this.$nextTick(() => {
-            //   this.treeProp.load = this.defaultLoadFunc;
-            //   console.log(this.treeProp.load);
-            // });
-          });
-        };
-        this.refresh = false;
-      });
-      // }
+        this.$nextTick(() => {
+          this.treeProp.load = (node, resolve) => {
+            const pid = node.parent ? node.data[this.treeProp.nodeKey] : 0;
+            let params = { pid };
+            if (keyword && !pid) {
+              params = { [this.ElTreeAttrs.props.label]: keyword };
+            }
+            this.getData(params, resolve).then(() => {
+              console.log(this.treeProp.load);
+              // this.$nextTick(() => {
+              //   this.treeProp.load = this.defaultLoadFunc;
+              //   console.log(this.treeProp.load);
+              // });
+            });
+          };
+          this.refresh = false;
+        });
+      }
     },
 
     // 过滤节点

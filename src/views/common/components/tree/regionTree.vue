@@ -4,7 +4,7 @@
  * @version: 1.0.0
  * @Date: 2020-12-22 09:57:34
  * @LastEditors: WingHong
- * @LastEditTime: 2020-12-31 18:13:04
+ * @LastEditTime: 2021-01-04 15:32:13
 -->
 <template>
   <div class="region-tree">
@@ -19,10 +19,14 @@
         :disabled="disabled.showCheckedNum"
         >显示选择节点数量</el-checkbox
       >
-      <el-checkbox v-model="config.subNodeNumber.show" :disabled="disabled.subNodeNumber"
+      <el-checkbox
+        v-model="config.subNodeNumber.show"
+        :disabled="disabled.subNodeNumber"
         >显示子节点数量</el-checkbox
       >
-      <el-checkbox v-model="config.subNodeNumber.onlySon" :disabled="disabled.subNodeNumber"
+      <el-checkbox
+        v-model="config.subNodeNumber.onlySon"
+        :disabled="disabled.subNodeNumber"
         >仅显示次级子节点数量</el-checkbox
       >
       <el-checkbox v-model="ElTreeAttrs.draggable">可拖拽排序</el-checkbox>
@@ -41,6 +45,23 @@
       @select="handleSelect"
       v-if="!refresh"
     >
+      <!-- <template #search>
+        <div>
+          <el-input
+            v-model="filterText"
+            placeholder="请输入名称模糊搜索"
+            maxlength="30"
+            style="border: 0 none; outline: 0 none; width: 90%"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="onSearch(filterText)"
+              >搜索</el-button
+            >
+          </el-input>
+        </div>
+      </template> -->
       <template #self-tool-bar>
         <!-- <slot name="tree-self-tool-bar"></slot> -->
         <div class="custom-tool-bar">
@@ -133,24 +154,26 @@ export default {
           }
         },
         lazy: true,
-        load: (node, resolve)=> {
-          const pid = node.parent ? node.data.id : 0;
-          return new Promise(() => {
-            fetchRegionList({pid}).then((res) => {
-              this.$refs.regionTree.loading = false;
-              resolve(res.data);
-            });
-          });
-        }
+        // load: (node, resolve) => {
+        //   const pid = node.parent ? node.data.id : 0;
+        //   return new Promise(() => {
+        //     fetchRegionList({ pid }).then((res) => {
+        //       this.$refs.regionTree.loading = false;
+        //       resolve(res.data);
+        //     });
+        //   });
+        // },
       },
       showOp: true,
       disabled: {
         checkAll: true,
         showCheckedNum: true,
 
-        subNodeNumber: true
+        subNodeNumber: true,
       },
       refresh: false,
+
+      filterText: ""
     };
   },
   watch: {
@@ -164,17 +187,16 @@ export default {
 
         this.disabled.showCheckedNum = !val;
         this.config.showCheckedNum = val;
-        
       },
     },
     "ElTreeAttrs.lazy": {
       handler(val) {
-        if(val) {
-          this.config.subNodeNumber.show = false
-          this.config.subNodeNumber.onlySon = false
+        if (val) {
+          this.config.subNodeNumber.show = false;
+          this.config.subNodeNumber.onlySon = false;
         }
         this.disabled.subNodeNumber = val;
-        
+
         this.refresh = true;
 
         this.$nextTick(() => {
@@ -240,6 +262,9 @@ export default {
         );
       });
     },
+    onSearch(value) {
+      this.$refs.regionTree.onSearch(value)
+    }
   },
 };
 </script>
