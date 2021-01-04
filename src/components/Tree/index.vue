@@ -67,7 +67,7 @@
 </template>
 <script>
 import Browser from "@/utils/browser";
-import _ from "lodash";
+// import _ from "lodash";
 export default {
   props: {
     config: Object, // 传入的基本配置项
@@ -237,7 +237,8 @@ export default {
       if (this.treeProp.lazy) {
         this.remoteData = this.remoteData.concat(treeData);
       } else {
-        this.remoteData = _.cloneDeep(treeData);
+        // this.remoteData = _.cloneDeep(treeData);
+        this.remoteData = JSON.parse(JSON.stringify(treeData))
       }
 
       // 然后将数据转为树需要的数据格式

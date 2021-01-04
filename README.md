@@ -31,7 +31,23 @@
     | 事件 | 说明 | 回调参数 |
     |--|--|--|
     | change | 选中项改变时触发 | 选中值 |
-2.  xxxx
+2.  ##### 树形控件BaseTree:
+    | 参数 | 类型 | 默认值 | 说明 |
+    |--|--|--|--|
+    | el-tree-attrs | object | { <br/>&ensp;nodeKey: "id",<br/>&ensp;parentKey: "pid",<br/>&ensp;showCheckbox: true,<br/>
+     &ensp;showCheckbox: true,<br/>&ensp;checkOnClickNode: true,<br/>&ensp;checkStrictly: true,<br/>&ensp;expandOnClickNode: false,<br/>&ensp;draggable: false,<br/>&ensp;defaultCheckedKeys: [],<br/>&ensp;defaultExpandedKeys: [],<br/>&ensp;props: {},<br/>&ensp;filterNodeMethod: ...,<br/>&ensp;load: ...<br/>} | elementUI el-tree的配置参数，预置了一些默认值，可自行修改 |
+    | itemProp | object | { value: "id", label: "name" } | 下拉选项主键、显示文本配置，例：{ value: "id", label: "name" } |
+    | remoteFunc | function | - | 调用远端服务器的接口函数，需返回Promise |
+    | remoteParams | - | - | 调用接口参数 |
+    | remoteFormat | function | - | 远程数据格式化函数 |
+    | autoRequest | boolean | true | 是否在初始化时自动请求数据 |
+    | remoteParamsNullable | boolean | true | 接口参数是否可空 |
+    | firstItem | object | - | 默认首项数据，例： { id: 0, name: "请选择" } |
+    | updateDefaultValue | boolean | - | 选中值为对象时，是否自动更新默认值数据, 仅当配置了value-key时生效 |
+
+    | 事件 | 说明 | 回调参数 |
+    |--|--|--|
+    | change | 选中项改变时触发 | 选中值 |
 3.  xxxx
 
 #### 参与贡献
