@@ -35,11 +35,18 @@
     | 参数 | 类型 | 默认值 | 说明 |
     |--|--|--|--|
     | el-tree-attrs | object | { <br/>&ensp;nodeKey: "id",<br/>&ensp;parentKey: "pid",<br/>&ensp;showCheckbox: true,<br/>&ensp;showCheckbox: true,<br/>&ensp;checkOnClickNode: true,<br/>&ensp;checkStrictly: true,<br/>&ensp;expandOnClickNode: false,<br/>&ensp;draggable: false,<br/>&ensp;defaultCheckedKeys: [],<br/>&ensp;defaultExpandedKeys: [],<br/>&ensp;props: {},<br/>&ensp;filterNodeMethod: ...,<br/>&ensp;load: ...<br/> } | elementUI el-tree的配置参数，预置了一些默认值，可自行修改 |
-    | config | object | { <br/>&ensp;filter: true,<br/>&ensp;allExpand: true,<br/>&ensp;showCheckAll: false,<br/>&ensp;showCheckedNum: true,<br/>&ensp;subNodeNumber: {show:false,onlySon:false},<br/>&ensp;remoteFunc、remoteParams、remoteFormat: ...<br/>&ensp;makeTreeFunc: ...,<br/>&ensp;renderBefore、renderAfter: ...<br/>&ensp;filterWithChildNodes: true,<br/>&ensp;sort: -,<br/>&ensp;sortKey: -,<br/> } | 额外添加的自定义配置参数:<br/>&ensp;filter: 是否显示搜索框（仅当使用默认搜索框生效，使用自定义slot时无效),<br/>&ensp;allExpand: 是否显示“全部展开/收起”功能,<br/>&ensp;showCheckAll: 是否显示全选框(多选生效),<br/>&ensp;showCheckedNum: 是否显示选择节点数量（多选生效）,<br/>&ensp;subNodeNumber: 是否显示子节点数量（懒加载无效,onlySon:只显示次级节点数量）,<br/>&ensp;remoteFunc、remoteParams、remoteFormat: 同下拉选择框,<br/>&ensp;makeTreeFunc: 造树函数,<br/>&ensp;renderBefore、renderAfter: 渲染树前后自定义函数,<br/>&ensp;filterWithChildNodes: 过滤节点时，是否显示匹配节点的子节点（懒加载无效）,<br/>&ensp;sort: 树渲染时是否对同级树节点进行重新排序,<br/>&ensp;sortKey: 排序参照键名,<br/><br/> |
+    | config | object | { <br/>&ensp;filter: true,<br/>&ensp;allExpand: true,<br/>&ensp;showCheckAll: false,<br/>&ensp;showCheckedNum: true,<br/>&ensp;subNodeNumber: {show:false,onlySon:false},<br/>&ensp;remoteFunc、remoteParams、remoteFormat: ...<br/>&ensp;makeTreeFunc: ...,<br/>&ensp;renderBefore、renderAfter: ...<br/>&ensp;filterWithChildNodes: true,<br/>&ensp;sort: -,<br/>&ensp;sortKey: -,<br/> } | 额外添加的自定义配置参数:<br/>&ensp;filter: 是否显示搜索框（仅当使用默认搜索框生效，使用自定义slot时无效),<br/>&ensp;allExpand: 是否显示“全部展开/收起”功能,<br/>&ensp;showCheckAll: 是否显示全选框(多选生效),<br/>&ensp;showCheckedNum: 是否显示选择节点数量（多选生效）,<br/>&ensp;subNodeNumber: 是否显示子节点数量（懒加载无效,onlySon:只显示次级节点数量）,<br/>&ensp;remoteFunc、remoteParams、remoteFormat: 同下拉选择框,<br/>&ensp;makeTreeFunc: 造树函数,<br/>&ensp;renderBefore、renderAfter: 渲染树前后自定义函数,<br/>&ensp;filterWithChildNodes: 过滤节点时，是否显示匹配节点的子节点（懒加载无效）,<br/>&ensp;sort: 树渲染时是否对同级树节点进行排序,<br/>&ensp;sortKey: 排序参照键名,<br/><br/> |
 
     | 事件 | 说明 | 回调参数 |
     |--|--|--|
-    | change | 选中项改变时触发 | 选中值 |
+    | select | 选中节点改变时触发 | 选中节点数组 |
+
+    | 方法 | 说明 | 回调参数 |
+    |--|--|--|
+    | select | 选中节点改变时触发 | 选中节点数组 |
+
+    ###### 特别说明：
+    1). abcd
 3.  xxxx
 
 #### 参与贡献
