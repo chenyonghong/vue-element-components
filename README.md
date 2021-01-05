@@ -39,7 +39,7 @@
 
     | 事件 | 说明 | 回调参数 |
     |--|--|--|
-    | select | 选中节点改变时触发 | 选中节点数组 |
+    | select | 选中节点改变时触发 | 选中节点数据 |
 
     | 方法 | 说明 | 参数 |
     |--|--|--|
@@ -47,11 +47,18 @@
     | updateNode | 更新指定节点数据 | (nodeData) 添加的节点数据（必须带node-key字段） |
     | deleteNode | 删除指定节点 | (dataId) 删除节点的node-key值 |
     | search | 节点搜索 | (keyword) 关键词 |
-    | toggleExpand | 切换全部展开/收起 | () |
+    | toggleExpand | 切换全部展开/收起 | - |
+    
+    ###### Scoped Slot:
+    | 方法 | 说明 | 参数 |
+    |--|--|
+    | search | 自定义搜索框,需手动调用search |
+    | self-tool-bar | 自定义工具栏内容 |
+    | node-append | 节点额外添加内容，如操作菜单等 |
 
-    ###### 特别说明：
-    1). abcd
-3.  xxxx
+    ###### 其它说明：
+    1). 若覆盖element-tree中的懒加载load方法，则搜索方法也需自定义；
+3.  ##### 表格BaseTable
 
 #### 参与贡献
 
