@@ -17,7 +17,7 @@
           slot="append"
           icon="el-icon-search"
           v-if="treeProp.lazy"
-          @click="onSearch(filterText)"
+          @click="search(filterText)"
         ></el-button>
       </el-input>
     </slot>
@@ -143,7 +143,7 @@ export default {
     // filterText(newVal) {
     //   // this.$refs.tree.filter(newVal);
     //   if(!this.treeProp.lazy)
-    //     this.onSearch(newVal)
+    //     this.search(newVal)
     // },
     checkAll(val) {
       let treeRef = this.$refs.tree;
@@ -521,7 +521,7 @@ export default {
     },
 
     // 懒加载搜索
-    onSearch(keyword) {
+    search(keyword) {
       if (!this.treeProp.lazy) this.$refs.tree.filter(keyword);
       else {
         this.refresh = true;

@@ -41,9 +41,13 @@
     |--|--|--|
     | select | 选中节点改变时触发 | 选中节点数组 |
 
-    | 方法 | 说明 | 回调参数 |
+    | 方法 | 说明 | 参数 |
     |--|--|--|
-    | select | 选中节点改变时触发 | 选中节点数组 |
+    | addNode | 往指定节点添加子节点，相当于element-tree的append | (nodeData, parentNode) 1.添加的节点数据，2.添加节点的父节点 |
+    | updateNode | 更新指定节点数据 | (nodeData) 添加的节点数据（必须带node-key字段） |
+    | deleteNode | 删除指定节点 | (dataId) 删除节点的node-key值 |
+    | search | 节点搜索 | (keyword) 关键词 |
+    | toggleExpand | 切换全部展开/收起 | () |
 
     ###### 特别说明：
     1). abcd

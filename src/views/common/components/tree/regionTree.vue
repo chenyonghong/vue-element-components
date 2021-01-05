@@ -263,7 +263,7 @@ export default {
       });
     },
     onSearch(value) {
-      this.$refs.regionTree.onSearch(value)
+      this.$refs.regionTree.search(value)
     }
   },
 };
