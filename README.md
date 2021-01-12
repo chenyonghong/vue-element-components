@@ -51,10 +51,10 @@
     
     ###### Scoped Slot:
     | 方法 | 说明 | 参数 |
-    |--|--|
-    | search | 自定义搜索框,需手动调用search |
-    | self-tool-bar | 自定义工具栏内容 |
-    | node-append | 节点额外添加内容，如操作菜单等 |
+    |--|--|--|
+    | search | 自定义搜索框,需手动调用search | - |
+    | self-tool-bar | 自定义工具栏内容 | - |
+    | node-append | 节点额外添加内容，如操作菜单等 | - |
 
     ###### 其它说明：
     1). 若覆盖element-tree中的懒加载load方法，则搜索方法也需自定义；

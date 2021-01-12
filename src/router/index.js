@@ -22,6 +22,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/tree/index.vue"),
   },
+  {
+    path: "/table",
+    name: "VeTable",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/table/index.vue"),
+  },
 ];
 
 const router = new VueRouter({

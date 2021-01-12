@@ -50,8 +50,7 @@
 
 <script>
 import Sortable from "sortablejs";
-// import { tableHeaderQuery, tableHeaderSave } from "@/api/comment";
-import { mapGetters } from "vuex";
+import { cloneDeep } from "./utils";
 
 export default {
   props: {
@@ -83,11 +82,11 @@ export default {
       this.setColumns();
     },
     async setColumns() {
-      // 从服务器读取 cloumns信息
+      // 从服务器/本地缓存读取 cloumns信息
       let columnsList = await this.getData();
       if (columnsList) {
         this.columnsList = columnsList;
-        this.$emit("confirm", _.cloneDeep(columnsList));
+        this.$emit("confirm", cloneDeep(columnsList));
       } else {
         this.setDefaultColumnsCore();
       }
@@ -111,7 +110,8 @@ export default {
     },
     // 获取初始数据
     getData() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
+        // 读取远程服务器数据
         // let params = {
         //     pageType: this.pageType,
         //     userId: this.user.userId
@@ -127,7 +127,11 @@ export default {
         //     .catch(e => {
         //         resolve(false);
         //     });
+
+        // 读取本地数据
         let columnsCopy = this.defaultColumns;
+        const localSto = localStorage.getItem(this.pageType);
+        if(localSto) columnsCopy = JSON.parse(localSto);
         // columnsCopy[2].hidden = true;
         resolve(columnsCopy);
       });
@@ -155,17 +159,15 @@ export default {
     setDefaultColumns() {
       const flag = this.setDefaultColumnsCore();
       if (flag) {
-        this.$emit("confirm", _.cloneDeep(this.columnsList));
+        this.$emit("confirm", cloneDeep(this.columnsList));
         this.dialogVisible = false;
         this.$message.success("恢复成功！");
       }
     },
     async setDefaultColumnsCore() {
       // this.columnsList = _.cloneDeep(this.defaultColumns).filter((item: ITableColumn) => !item.alwaysShow);
-      this.columnsList = _.cloneDeep(this.defaultColumns);
-      const result = await this.saveColumnsConf(
-        JSON.stringify(this.defaultColumns)
-      );
+      this.columnsList = cloneDeep(this.defaultColumns);
+      const result = await this.saveColumnsConf(this.defaultColumns);
       return result;
     },
     // 确认保存
@@ -180,9 +182,9 @@ export default {
             }
             return item1;
           })
-          .map((item1, index1) => {
+          .map((item1) => {
             if (!item1.alwaysShow) {
-              selection.forEach((item2, index2) => {
+              selection.forEach((item2) => {
                 if (!item2.alwaysShow && item2.label === item1.label) {
                   item1.hidden = false;
                 }
@@ -191,15 +193,17 @@ export default {
             return item1;
           });
       // 保存
-      const flag = await this.saveColumnsConf(JSON.stringify(result));
+      const flag = await this.saveColumnsConf(result);
       if (flag) {
         this.$emit("confirm", result);
         this.dialogVisible = false;
       }
     },
-    // 保存列表配置信息到远程
+    // 保存列表配置信息到远程或本地
     saveColumnsConf(value) {
-      return new Promise((resolve, reject) => {
+      console.log(value);
+      return new Promise((resolve) => {
+        // 保存远程服务器
         // let params = {
         //     pageType: this.pageType,
         //     userId: this.user.userId,
@@ -208,8 +212,18 @@ export default {
         // tableHeaderSave(params).then(data => {
         //     resolve(true);
         // });
+
+        // 保存在浏览器缓存
+        localStorage.setItem(this.pageType, this.stringify(value));
         resolve(true);
       });
+    },
+    // 将函数也格式化成字符串
+    stringify(dataJSON) {
+      // return JSON.stringify(dataJSON,function(key, val) {
+      //   return (typeof val === 'function') ? '' + val : val;
+      // });
+      return JSON.stringify(dataJSON);
     },
     resetDialogTable() {
       this.isIndeterminate = true;
@@ -221,7 +235,7 @@ export default {
         _this = this;
       if (tbody === null) return;
       this.sortable = new Sortable(tbody, {
-        onUpdate: function (e) {
+        onUpdate: function(e) {
           let arr = _this.columnsList;
           arr.splice(e.newIndex, 0, arr.splice(e.oldIndex, 1)[0]); // 数据处理
         },
@@ -240,14 +254,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.table-header-filter-dialog {
-  ::v-deep .el-dialog__body {
-    .el-table {
-      .hidden-row {
-        display: none;
-      }
-    }
-  }
+<style scoped>
+.table-header-filter-dialog >>> .el-dialog__body .el-table .hidden-row {
+  display: none;
 }
 </style>

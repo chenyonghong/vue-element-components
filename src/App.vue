@@ -8,6 +8,7 @@
         <router-link to="/">Home</router-link>
         <router-link to="/select">下拉选择框</router-link>
         <router-link to="/tree">树形控件</router-link>
+        <router-link to="/table">表格</router-link>
       </div>
     </div>
     <div class="app-main">
@@ -37,11 +38,13 @@
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
   color: #2c3e50;
-  display: flex;
 }
 
 .side-bar {
-  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
   background: #fafafa;
   text-align: center;
 }
@@ -66,7 +69,8 @@
   color: #42b983;
 }
 .app-main {
-  flex: 1;
+  margin-left: 220px;
+  min-height: 100%;
   background: #e6e6e6;
 }
 .app-main .nav-bar {
@@ -87,7 +91,7 @@
   margin: 20px;
   padding: 20px;
   background: #fff;
-  height: calc(100% - 130px);
+  height: calc(100vh - 130px);
   overflow: auto;
 }
 </style>

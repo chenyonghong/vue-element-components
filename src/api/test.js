@@ -21,3 +21,33 @@ export function fetchRegionList(data) {
     data,
   });
 }
+
+export function fetchTableList(data) {
+  return request({
+    url: 'project/list',
+    method: 'post',
+    data
+  })
+}
+export function fetchProjectAdd(data) {
+  return request({
+    url: 'project/add',
+    method: 'post',
+    data
+  })
+}
+export function fetchProjectUpdate(data) {
+  return request({
+    url: 'project/update',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchProjectDelete(data) {
+  return request({
+    url: 'project/delete',
+    method: 'post',
+    data
+  })
+}
