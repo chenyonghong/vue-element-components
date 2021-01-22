@@ -12,8 +12,8 @@
         </el-button>
       </div>
       <el-table
-        :id="randomId"
-        :ref="randomId"
+        :id="'el-table-' + randomId"
+        ref="elTable"
         v-loading="tableLoading"
         class="table-instance"
         :data="
@@ -21,10 +21,8 @@
             ? tableData
             : tableDataShow
         "
-        v-bind="tableConf"
-        @selection-change="handleSelectionChange"
-        @select="select"
-        @select-all="selectAll"
+        v-bind="element.attrs"
+        v-on="element.events"
       >
         <template v-for="(item, index) in showColumnsTemp">
           <el-table-column
@@ -37,7 +35,7 @@
                 :is="item.component"
                 v-if="item && item.component"
                 :scope="scope.row"
-                @refresh="makeTable"
+                @refresh="refresh"
               ></component>
               <template-render
                 v-else-if="item.template"
@@ -56,14 +54,9 @@
     <div v-if="tableConf.pagination" class="table-pg">
       <el-pagination
         v-if="tableConf.pagination"
-        background
         :current-page.sync="curPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="10"
-        :pager-count="5"
-        layout="total, sizes, prev, pager, next, jumper"
-        source-name="pagination"
         :total="total"
+        v-bind="defaultPagination"
         @size-change="handleSizeChange"
       ></el-pagination>
     </div>
@@ -79,11 +72,13 @@
 
 <script>
 import request from "@/utils/request";
+import { defaultConfig, defaultEl, defaultPagination } from "./defaultSettings";
 import TemplateRender from "./TemplateRender.vue";
 import ColumnsFilter from "./TableColunmFilter.vue";
-import { cloneDeep } from "./utils";
+import { cloneDeep, assignDeep } from "./utils";
 
 export default {
+  name: "VeTable",
   components: {
     TemplateRender,
     ColumnsFilter,
@@ -92,26 +87,12 @@ export default {
     config: Object,
     requestConf: Object,
     columns: Array,
+    el: Object
   },
 
   data() {
     return {
-      // 默认的表格配置项
-      defaultConf: {
-        tableName: "",
-        defaultSort: {},
-        stripe: true,
-        border: true,
-        height: "calc(100% - 82px)",
-        maxHeight: 800,
-        pagination: true,
-        paginationMode: 1,
-        done: "",
-        firstAutoRequest: false,
-        rowKey: "",
-        defaultExpandAll: false,
-        filterable: false,
-      },
+      defaultPagination,
       randomId: "",
       // 默认的网络请求参数
       defaultRequestConf: {
@@ -130,19 +111,20 @@ export default {
       curPage: 1,
       pageSize: 10,
 
-      isFirstLoad: false,
-      tempTime: null,
-      requestRes: {}, // 远程接口返回的所有数据（不仅限于tableData）
+      isFirstLoad: false, // 第一页
 
       filterVisible: false,
 
-      showColumnsTemp: [],
+      showColumnsTemp: []
     };
   },
 
   computed: {
+    element() {
+      return assignDeep({}, defaultEl, this.el);
+    },
     request() {
-      return Object.assign({}, this.defaultRequestConf, this.requestConf);
+      return assignDeep({}, this.defaultRequestConf, this.requestConf);
     },
 
     // 请求接口函数
@@ -150,15 +132,9 @@ export default {
       if (this.request.func) {
         return this.request.func;
       } else {
-        // const this.request = _.assign(
-        //         {},
-        //         this.defaultRequestConf,
-        //         this.requestConf
-        //     ),
         const REQUEST = (data) =>
           request({
             url: this.request.url,
-            // data: this.request.isPostJson ? JSON.stringify(this.request.data) : this.request.data,
             data,
             method: this.request.type || this.request.method,
             contentType: this.request.config.contentType,
@@ -172,7 +148,7 @@ export default {
     },
     // 现有的表格配置项
     tableConf() {
-      return Object.assign(this.defaultConf, this.config);
+      return Object.assign(defaultConfig, this.config);
     },
     // 当前表格调用形式，1：传递columns属性 2.传递slot
     mode() {
@@ -180,7 +156,7 @@ export default {
       if (this.columns && this.columns.length > 0) mode = 1;
       return mode;
     },
-    // 过滤表格列所需字段
+    // 过滤表格弹框，列所需字段
     filterColumns() {
       return this.columns.map(item=> {
         const resultItem = {}, includeKeys = ['alwaysShow', 'label', 'prop', 'hidden', 'type'];
@@ -194,23 +170,38 @@ export default {
     }
   },
 
-  created() {
-    let randomId = parseInt(Math.random() * 1000000 + "");
-    this.randomId = "table" + randomId;
+  watch: {
+    // request改变，触发数据刷新
+    // requestConf: {
+    //   handler() {
+    //     this.isFirstLoad = true;
+    //     this.curPage = 1;
+    //     this.makeTable();
+    //   },
+    //   deep: true,
+    // },
+    columns: {
+      handler(val) {
+        if (!this.tableConf.filterable && val && val.length) {
+          this.showColumnsTemp = cloneDeep(val);
+        }
+      },
+    },
+    curPage() {
+      if (!this.isFirstLoad) {
+        this.handleCurrentChange();
+      }
+    },
   },
-  mounted() {
-    if (this.tableConf.firstAutoRequest) {
-      // if (this.requestConf.url) {
-      this.makeTable();
-      // }
-    }
-    if (!this.tableConf.filterable && this.columns && this.columns.length) {
-      this.showColumnsTemp = cloneDeep(this.columns);
-    }
-  },
+
   methods: {
-    handleEmitter(a, b) {
-      console.log(a,b);
+    // 刷新表格数据
+    refresh(resetPage=false) {
+      if(resetPage) {
+        this.isFirstLoad = true;
+        this.curPage = 1;
+      }
+      this.makeTable();
     },
     // 本地分页
     pageLocal() {
@@ -222,9 +213,8 @@ export default {
     makeTable() {
       this.showLoading();
       this.fetchData();
-      this.doLayout();
     },
-
+    // 请求远端数据
     fetchData() {
       let params = cloneDeep(this.requestParams);
       // 当启用分页，每次请求携带分页参数
@@ -234,14 +224,10 @@ export default {
           pageSize: this.pageSize,
         });
       }
-      
       this.requestMethod(params)
         .then((res) => {
-          this.requestRes = res;
           let responseData = cloneDeep(res);
-          
-          this.setTableData(responseData);
-
+          this.setData(responseData);
           this.isFirstLoad = false;
           this.hideLoading();
         })
@@ -255,7 +241,7 @@ export default {
       // });
     },
     // 给tableData赋值
-    setTableData(res) {
+    setData(res) {
       if (this.request.formatData && typeof this.request.formatData === 'function') {
         this.tableData = res ? this.request.formatData(res) : [];
       }
@@ -283,18 +269,13 @@ export default {
       this.tableLoading = false;
     },
     // 直接给tableData赋值方法，提供给组件外部调用
-    forceSetTableData(arr) {
+    setTableData(arr) {
       this.tableData = arr;
       this.total = arr.length;
-    },
-    // 选中行触发
-    handleSelectionChange(selection) {
-      this.$emit("selection-change", selection);
     },
     handleSizeChange(size) {
       this.pageSize = size;
       this.curPage = 1;
-      // this.$emit('size-change', size);
       // 本地分页
       if (this.tableConf.paginationMode === 2) {
         this.pageLocal();
@@ -303,86 +284,15 @@ export default {
       }
     },
     handleCurrentChange() {
+      // eslint-disable-next-line no-debugger
+      // debugger;
+      // this.curPage = current;
       // 本地分页
       if (this.tableConf.paginationMode === 2) {
         this.pageLocal();
       } else {
         this.makeTable();
       }
-    },
-    select(selection, row) {
-      this.$emit("select", selection, row);
-    },
-    selectAll(selection) {
-      this.$emit("select-all", selection);
-    },
-    getSelection() {
-      return this.$refs[this.randomId].selection;
-    },
-    // 处理有分页的情况下表格的max-height
-    handleMaxHeight(height) {
-      if (!height) {
-        return undefined;
-      }
-      if (
-        this.tableConf.pagination &&
-        height &&
-        typeof height === "string" &&
-        height.indexOf("%") < 0
-      ) {
-        let tmp = height.replace("px", "");
-        return Number(tmp) - 62 + "px";
-      } else {
-        return height;
-      }
-    },
-
-    // 暴露给父级组件的根据传入参数自动勾选接口，需要开启selection功能
-    setSelectNodes(nodes) {
-      this.toggleRowSelection(nodes, true);
-    },
-    // 暴露给父级组件的根据传入参数自动取消勾选接口，需要开启selection功能
-    setSelectNodesCancel(nodes, callback) {
-      this.toggleRowSelection(nodes, false, callback);
-    },
-
-    // 暴露给父组件的清空用户选中项接口
-    setClearSelection() {
-      this.$refs[this.randomId].clearSelection();
-    },
-
-    // 勾选
-    toggleRowSelection(arr, sta, callback) {
-      if (arr) {
-        let tableRef = this.$refs[this.randomId];
-        if (this.tempTime) {
-          clearTimeout(this.tempTime);
-        }
-        if (tableRef.data.length) {
-          arr.forEach((row) => {
-            tableRef.data.forEach((item) => {
-              if (item.id === row.id) {
-                tableRef.toggleRowSelection(item, sta);
-              }
-            });
-          });
-          if (callback) {
-            callback();
-          }
-        } else {
-          this.tempTime = setTimeout(() => {
-            this.toggleRowSelection(arr, sta, callback);
-          }, 100);
-        }
-      }
-    },
-    // 获取res的数据
-    getRequestResult() {
-      return this.requestRes;
-    },
-    // 重新布局table
-    doLayout() {
-      this.$refs[this.randomId].doLayout();
     },
 
     handleFilterConfirm(data) {
@@ -400,37 +310,19 @@ export default {
       });
     },
   },
-  watch: {
-    // request改变，触发数据刷新
-    requestConf: {
-      handler() {
-        this.isFirstLoad = true;
-        this.curPage = 1;
-        this.makeTable();
-      },
-      deep: true,
-    },
-    columns: {
-      handler(val) {
-        if (!this.tableConf.filterable && val && val.length) {
-          this.showColumnsTemp = cloneDeep(val);
-        }
-      },
-    },
-    "config.maxHeight": {
-      handler(val) {
-        if (val) {
-          this.tableConf.maxHeight = this.handleMaxHeight(val);
-        }
-      },
-      deep: true,
-    },
-    curPage() {
-      if (!this.isFirstLoad) {
-        this.handleCurrentChange();
-      }
-    },
+
+  created() {
+    this.randomId = parseInt(Math.random() * 1000000 + "");
   },
+  mounted() {
+    if (this.tableConf.firstAutoRequest) {
+      this.makeTable();
+    }
+    if (!this.tableConf.filterable && this.columns && this.columns.length) {
+      this.showColumnsTemp = cloneDeep(this.columns);
+    }
+    console.log(this.tableConf)
+  }
 };
 </script>
 

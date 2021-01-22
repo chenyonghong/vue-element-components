@@ -8,7 +8,7 @@
         maxlength="30"
         @input="
           (value) => {
-            this.treeProp.lazy ? null : this.$refs.tree.filter(value);
+            this.eleme.lazy ? null : this.$refs.tree.filter(value);
           }
         "
         style="border: 0 none; outline: 0 none; width: 90%"
@@ -16,7 +16,7 @@
         <el-button
           slot="append"
           icon="el-icon-search"
-          v-if="treeProp.lazy"
+          v-if="eleme.lazy"
           @click="search(filterText)"
         ></el-button>
       </el-input>
@@ -37,10 +37,10 @@
       <el-checkbox
         class="check-all"
         v-model="checkAll"
-        v-if="treeProp.showCheckbox && baseConf.showCheckAll"
+        v-if="eleme.showCheckbox && baseConf.showCheckAll"
         >全选</el-checkbox
       >
-      <span v-if="baseConf.showCheckedNum && treeProp.showCheckbox">
+      <span v-if="baseConf.showCheckedNum && eleme.showCheckbox">
         已选择<span style="color: red"> {{ checkedNum }} </span>个
       </span>
     </div>
@@ -50,7 +50,7 @@
         ref="tree"
         class="filter-tree"
         :data="treeData"
-        v-bind="treeProp"
+        v-bind="eleme"
         @node-click="handleNodeClick"
         @check-change="checkChange"
         v-on="$listeners"
@@ -67,54 +67,17 @@
 </template>
 <script>
 import Browser from "@/utils/browser";
-// import _ from "lodash";
+import { defaultEl, defaultConfig } from "./defaultSettings";
+import { assignDeep } from "../utils";
 export default {
+  name: "VeTree",
   props: {
     config: Object, // 传入的基本配置项
-    ElTreeAttrs: Object, // 传入的el-tree 配置项
+    el: Object, // 传入的el-tree 配置项
   },
   data() {
     return {
-      visible: false,
       // 默认的基本配置项
-      defaultConf: {
-        filter: true,
-        allExpand: true,
-        showCheckAll: false,
-        showCheckedNum: true,
-        subNodeNumber: {
-          show: false,
-          onlySon: false,
-        },
-        makeTreeFunc: (data) => {
-          const parentNode = data.filter((a) => a.isTop);
-          parentNode.forEach((p) => {
-            this.setChildren(p, data);
-          });
-          return parentNode;
-        },
-        filterWithChildNodes: true, // 搜索过滤节点时，是否显示匹配节点的子节点
-      },
-      // 默认的el-tree 配置项
-      defaultTreeAttrs: {
-        nodeKey: "id",
-        parentKey: "pid",
-        showCheckbox: true, // 是否显示复选框
-        checkOnClickNode: true, // 是否在点击节点时选中该节点（多选模式）
-        checkStrictly: true, // 在显示复选框的情况下，是否严格的遵循父子不互相关联的做法，默认为 false
-        expandOnClickNode: false, // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
-        draggable: false,
-        defaultCheckedKeys: [],
-        defaultExpandedKeys: [], // 默认展开的节点的 key 的数组
-        props: {
-          children: "children",
-          label: "label",
-          isLeaf: "isLeaf",
-          disabled: "disabled",
-        },
-        filterNodeMethod: this.filterNode,
-        load: this.defaultLoadFunc,
-      },
       filterText: "", // 搜索框文本
       isExpand: false, // 是否全部展开
       checkedNum: 0, // 选择的节点数量
@@ -124,25 +87,44 @@ export default {
       checkAll: false,
 
       refresh: false,
+      // eltree_ref: this.$refs.tree
     };
   },
 
   computed: {
-    // 合并后的基础配置项
+    // 合并后的拓展配置项
     baseConf() {
-      return Object.assign({}, this.defaultConf, this.config);
+      const config = assignDeep({}, defaultConfig, this.config);
+      if (!this.eleme.lazy && !config.makeTreeFunc) {
+        config.makeTreeFunc = (data) => {
+          const parentNode = data.filter((a) => a.isTop);
+          parentNode.forEach((p) => {
+            this.setChildren(p, data);
+          });
+          return parentNode;
+        };
+      }
+      return config;
     },
     // 合并后的el-tree配置项
-    treeProp: {
-      get() {
-        return Object.assign({}, this.defaultTreeAttrs, this.ElTreeAttrs);
-      },
+    eleme() {
+      const eleme = assignDeep({}, defaultEl, this.el);
+      if (eleme.lazy && !eleme.load) {
+        eleme.load = this.defaultLoadFunc;
+      }
+      if (!eleme.filterNodeMethod) {
+        eleme.filterNodeMethod = this.filterNode;
+      }
+      return eleme;
+    },
+    eltree_ref() {
+      return this.$refs.tree;
     },
   },
   watch: {
     // filterText(newVal) {
     //   // this.$refs.tree.filter(newVal);
-    //   if(!this.treeProp.lazy)
+    //   if(!this.eleme.lazy)
     //     this.search(newVal)
     // },
     checkAll(val) {
@@ -150,7 +132,7 @@ export default {
       const allNodeKeys = [];
       const getKeys = (nodeList) => {
         nodeList.forEach((node) => {
-          allNodeKeys.push(node[this.treeProp.nodeKey]);
+          allNodeKeys.push(node[this.eleme.nodeKey]);
           if (node.children && node.children.length) {
             getKeys(node.children);
           }
@@ -169,9 +151,9 @@ export default {
   created() {
     this.loading = true;
     if (this.baseConf.showCheckedNum) {
-      this.checkedNum = this.treeProp.defaultCheckedKeys.length;
+      this.checkedNum = this.eleme.defaultCheckedKeys.length;
     }
-    if (!this.treeProp.lazy) {
+    if (!this.eleme.lazy) {
       this.getData().then((result) => {
         // 树渲染完成后，执行选中确认方法，将结果返回
         if (result) {
@@ -206,16 +188,16 @@ export default {
     },
     // 默认的懒加载方法
     defaultLoadFunc(node, resolve) {
-      const pid = node.parent ? node.data[this.treeProp.nodeKey] : 0;
+      const pid = node.parent ? node.data[this.eleme.nodeKey] : 0;
       this.getData({ pid }, resolve);
     },
     // 从远程服务器获取数据
     getData(params = {}, resol) {
       return new Promise((resolve) => {
-        // const resolver = this.treeProp.lazy ? resol : resolve;
+        // const resolver = this.eleme.lazy ? resol : resolve;
         // const resolver = resol || resolve;
         if (this.baseConf.remoteFunc) {
-          // if (!this.treeProp.lazy) params = this.baseConf.remoteParams;
+          // if (!this.eleme.lazy) params = this.baseConf.remoteParams;
           Object.assign(params, this.baseConf.remoteParams);
           this.baseConf.remoteFunc(params).then((res) => {
             const result = this.renderTree(res);
@@ -234,11 +216,11 @@ export default {
       if (formatter && typeof formatter === "function") {
         treeData = formatter(treeData);
       }
-      if (this.treeProp.lazy) {
+      if (this.eleme.lazy) {
         this.remoteData = this.remoteData.concat(treeData);
       } else {
         // this.remoteData = _.cloneDeep(treeData);
-        this.remoteData = JSON.parse(JSON.stringify(treeData))
+        this.remoteData = JSON.parse(JSON.stringify(treeData));
       }
 
       // 然后将数据转为树需要的数据格式
@@ -266,7 +248,7 @@ export default {
 
       this.baseConf.renderBefore && this.baseConf.renderBefore();
 
-      if (!this.treeProp.lazy) {
+      if (!this.eleme.lazy) {
         this.treeData = treeData;
       }
 
@@ -282,9 +264,7 @@ export default {
       parentNode.children = [];
       dataList.forEach((item) => {
         // 如果遍历出来节点的父id === 该节点的id，则这是节点都是该节点的孩子
-        if (
-          item[this.treeProp.parentKey] === parentNode[this.treeProp.nodeKey]
-        ) {
+        if (item[this.eleme.parentKey] === parentNode[this.eleme.nodeKey]) {
           parentNode.children.push(item);
           this.setChildren(item, dataList);
         } else {
@@ -335,11 +315,15 @@ export default {
     // 默认排序函数
     sort(children) {
       children.sort((a, b) => {
+        const sortDemension = {
+          asc: 1,
+          desc: -1,
+        };
         return a[this.baseConf.sortKey] > b[this.baseConf.sortKey]
-          ? 1
+          ? sortDemension[this.baseConf.sort]
           : a[this.baseConf.sortKey] == b[this.baseConf.sortKey]
           ? 0
-          : -1;
+          : -sortDemension[this.baseConf.sort];
       });
       // children = _.sortBy(children, [this.baseConf.sortKey]);
       children.forEach((c) => {
@@ -354,29 +338,36 @@ export default {
     addNode(nodeData, parentNode) {
       // 先获取添加的节点的父节点
       if (!parentNode) {
-        parentNode = this.$refs.tree.getNode(nodeData[this.treeProp.parentKey]);
+        parentNode = this.$refs.tree.getNode(nodeData[this.eleme.parentKey]);
       }
-      nodeData.label = nodeData[this.treeProp.props.label];
+      nodeData.label = nodeData[this.eleme.props.label];
       this.$refs.tree.append(nodeData, parentNode);
       // 插入完成重新排序
-      parentNode.data.children = this.sort(parentNode.data.children);
-      parentNode.childNodes.sort((a, b) => {
-        return a.data[this.baseConf.sortKey] > b.data[this.baseConf.sortKey]
-          ? 1
-          : a.data[this.baseConf.sortKey] == b.data[this.baseConf.sortKey]
-          ? 0
-          : -1;
-      });
-      //   this.$refs.tree.updateKeyChildren(nodeData[this.treeProp.parentKey], parentNode.data.children)
+      if (this.baseConf.sort) {
+        parentNode.data.children = this.sort(parentNode.data.children);
+        parentNode.childNodes.sort((a, b) => {
+          const sortDemension = {
+            asc: 1,
+            desc: -1,
+          };
+          return a.data[this.baseConf.sortKey] > b.data[this.baseConf.sortKey]
+            ? sortDemension[this.baseConf.sort]
+            : a.data[this.baseConf.sortKey] == b.data[this.baseConf.sortKey]
+            ? 0
+            : -sortDemension[this.baseConf.sort];
+        });
+      }
+
+      //   this.$refs.tree.updateKeyChildren(nodeData[this.eleme.parentKey], parentNode.data.children)
     },
 
     // 更新节点
     updateNode(node) {
-      //   const target = this.$refs.tree.getNode(node[this.treeProp.nodeKey]);
+      //   const target = this.$refs.tree.getNode(node[this.eleme.nodeKey]);
       //   target.data = node;
       //   debugger;
       //   console.log(node);
-      this.deleteNode(node[this.treeProp.nodeKey]);
+      this.deleteNode(node[this.eleme.nodeKey]);
       this.addNode(node);
     },
 
@@ -410,29 +401,14 @@ export default {
       // for (let i = 0; i < this.remoteData.length; i++) {
       //   // 将没有转换成树的原数据设置key为... 的展开
       //   const node = this.$refs.tree.getNode(
-      //     this.remoteData[i][this.treeProp.nodeKey]
+      //     this.remoteData[i][this.eleme.nodeKey]
       //   );
       //   if (node && node.childNodes.length > 0) {
       //     node.expanded = this.isExpand;
       //   }
       // }
     },
-    // 拖放
-    // handleDragStart(node, ev) {
-    //     console.log("drag start", node);
-    // }
-    // handleDragEnter(draggingNode, dropNode, ev) {
-    //     console.log("tree drag enter: ", dropNode.label);
-    // }
-    // handleDragLeave(draggingNode, dropNode, ev) {
-    //     console.log("tree drag leave: ", dropNode.label);
-    // }
-    // handleDragOver(draggingNode, dropNode, ev) {
-    //     console.log("tree drag over: ", dropNode.label);
-    // }
-    // handleDragEnd(draggingNode, dropNode, dropType, ev) {
-    //     console.log("tree drag end: ", dropNode && dropNode.label, dropType);
-    // }
+    
     handleDrop(draggingNode) {
       // 拖动元素父节点
       const parentNode = this.$refs.tree.getNode(draggingNode.data.pid),
@@ -442,20 +418,6 @@ export default {
           return posChild.data.id;
         });
       this.$emit("treeSort", idList);
-    },
-    // 更新当前节点下子节点(外部调用)
-    updateCurrentChildren(treeData) {
-      const currentKey = this.$refs.tree.getCurrentKey();
-      // const  currentNode = this.$refs.tree.getNode(currentKey);
-      if (currentKey) {
-        //const resolve = treeData => {
-        this.$refs.tree.updateKeyChildren(currentKey, treeData);
-        //};
-      }
-    },
-    // 设置被勾选的节点
-    setTreeCheckNode(arr) {
-      this.$refs.tree.setCheckedKeys(arr);
     },
 
     confirm() {
@@ -486,10 +448,9 @@ export default {
         checkedNodes.forEach((node) => {
           const parentName = joinName(node.id);
           if (parentName) {
-            node.fullPathName =
-              parentName + "/" + node[this.treeProp.props.label];
+            node.fullPathName = parentName + "/" + node[this.eleme.props.label];
           } else {
-            node.fullPathName = node[this.treeProp.props.label];
+            node.fullPathName = node[this.eleme.props.label];
           }
         });
       }
@@ -502,7 +463,7 @@ export default {
     // 节点点击事件
     handleNodeClick(item) {
       // return;
-      if (!this.treeProp.showCheckbox) {
+      if (!this.eleme.showCheckbox) {
         this.$refs.tree.setCheckedKeys([item.id]);
         // this.confirm()
       }
@@ -510,7 +471,7 @@ export default {
 
     // 选项改变事件
     checkChange(item, isNodeChecked) {
-      if (!this.treeProp.showCheckbox) {
+      if (!this.eleme.showCheckbox) {
         if (isNodeChecked === true) {
           this.$refs.tree.setCheckedKeys([item.id]);
           this.confirm();
@@ -522,22 +483,22 @@ export default {
 
     // 懒加载搜索
     search(keyword) {
-      if (!this.treeProp.lazy) this.$refs.tree.filter(keyword);
+      if (!this.eleme.lazy) this.$refs.tree.filter(keyword);
       else {
         this.refresh = true;
 
         this.$nextTick(() => {
-          this.treeProp.load = (node, resolve) => {
-            const pid = node.parent ? node.data[this.treeProp.nodeKey] : 0;
+          this.eleme.load = (node, resolve) => {
+            const pid = node.parent ? node.data[this.eleme.nodeKey] : 0;
             let params = { pid };
             if (keyword && !pid) {
-              params = { [this.ElTreeAttrs.props.label]: keyword };
+              params = { [this.eleme.props.label]: keyword };
             }
             this.getData(params, resolve).then(() => {
-              console.log(this.treeProp.load);
+              console.log(this.eleme.load);
               // this.$nextTick(() => {
-              //   this.treeProp.load = this.defaultLoadFunc;
-              //   console.log(this.treeProp.load);
+              //   this.eleme.load = this.defaultLoadFunc;
+              //   console.log(this.eleme.load);
               // });
             });
           };
@@ -549,7 +510,7 @@ export default {
     // 过滤节点
     filterNode(value, data, node) {
       if (!value) return true;
-      let textName = data[this.treeProp.props.label];
+      let textName = data[this.eleme.props.label];
       if (this.baseConf.filterWithChildNodes) {
         const getParentIsMatch = (node) => {
           if (node.parent && node.parent.label) {
@@ -567,13 +528,10 @@ export default {
         return textName.indexOf(value) !== -1;
       }
       // return (
-      //     data[this.treeProp.props.label].indexOf(value) !== -1 ||
+      //     data[this.eleme.props.label].indexOf(value) !== -1 ||
       //     (node.parent.label && node.parent.label.indexOf(value) !== -1)
       // );
     },
-    // handleEllipseClick(e) {
-    //     e.cancelBubble=true;
-    // }
   },
 };
 </script>

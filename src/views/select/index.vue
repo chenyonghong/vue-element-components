@@ -24,6 +24,32 @@
       ></user-selector>
       <span>value: {{ user2 }}</span>
     </div>
+
+    <p>分组：</p>
+    <div class="item">
+      <user-selector
+        v-model="groupValue"
+        :formatFunc="formatGroup"
+        @change="handleChangeGroup"
+      >
+        <template #default="{dataList}">
+          <el-option-group
+            v-for="group in dataList"
+            :key="group.label"
+            :label="group.label"
+          >
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-option-group>
+        </template>
+      </user-selector>
+      <span>value: {{ groupValue }}</span>
+    </div>
   </div>
 </template>
 
@@ -39,6 +65,7 @@ export default {
       user2: {
         id: 2,
       },
+      groupValue: "",
     };
   },
   methods: {
@@ -47,6 +74,35 @@ export default {
     },
     handleChange2(data) {
       this.user2 = data;
+    },
+    formatGroup({ data }) {
+      let result = [];
+      data.forEach((item) => {
+        const matchItem = result.filter(
+          (alItem) => alItem.label === item.department
+        );
+        if (matchItem.length) {
+          matchItem[0].options.push({
+            value: item.id,
+            label: item.name,
+          });
+        } else {
+          result.push({
+            label: item.department,
+            options: [
+              {
+                value: item.id,
+                label: item.name,
+              },
+            ],
+          });
+        }
+      });
+      console.log(result)
+      return result;
+    },
+    handleChangeGroup(data) {
+      this.groupValue = data;
     },
   },
 };

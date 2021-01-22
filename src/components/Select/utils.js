@@ -32,7 +32,7 @@ const assignDeep = function() {
 		if (isPlainObject(item)) {
 			if (!isPlainObject(result)) result = {}
 			for (let key in item) {
-				if (result[key] && (isPlainObject(item[key]) || item[key] instanceof Array)) {
+				if (result[key] && isPlainObject(item[key])) {
 					result[key] = assignDeep(result[key], item[key])
 				} else {
 					result[key] = item[key]

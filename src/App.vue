@@ -9,6 +9,7 @@
         <router-link to="/select">下拉选择框</router-link>
         <router-link to="/tree">树形控件</router-link>
         <router-link to="/table">表格</router-link>
+        <router-link to="/table2">表格2</router-link>
       </div>
     </div>
     <div class="app-main">

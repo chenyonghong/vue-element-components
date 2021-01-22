@@ -1,6 +1,7 @@
 <script>
 import Vue from "vue";
 import { cloneDeep } from "./utils";
+import BusFactory from "./eventBus";
 
 export default {
   props: {
@@ -26,7 +27,8 @@ export default {
       },
       methods: {
         handleClick(keyword) {
-          this.Bus.$emit(keyword + "Click", cloneDeep(scope), index);
+          // this.Bus.$emit(keyword + "Click", cloneDeep(scope), index);
+          BusFactory(this).$emit(keyword + "Click", cloneDeep(scope), index);
         },
       },
       template: this.html,

@@ -8,33 +8,45 @@
 -->
 <template>
   <div class="container">
-    <base-select
-      :el-select-attrs="{
-        value: $attrs.value,
-        placeholder: $attrs.placeholder,
-        valueKey: $attrs.valueKey || ($attrs['with-full-data'] ? 'id' : ''),
-      }"
-      :updateDefaultValue="$attrs.updateDefaultValue"
-      :item-prop="{ value: 'id', label: 'name' }"
+    <ve-select
+      :el='{
+        attrs: {
+          value: this.$attrs.value,
+          placeholder: this.$attrs.placeholder,
+          valueKey:
+            this.$attrs.valueKey || (this.$attrs["with-full-data"] ? "id" : ""),
+        }
+      }'
+      :config='{
+        updateDefaultValue: this.$attrs.updateDefaultValue,
+        optionAttrs: {
+          value: "id",
+          label: "name",
+        },
+      }'
       :remoteFunc="getUserList"
-      :remoteFormat="formatData"
+      :remoteFormat="$attrs.formatFunc||formatData"
       @change="$listeners.change"
-    ></base-select>
+    >
+      <template #default="{scope}">
+        <slot :dataList="scope" />
+      </template>
+    </ve-select>
   </div>
 </template>
 
 <script>
-import BaseSelect from "@/components/Dropdown/BaseSelect.vue";
+import VeSelect from "@/components/Select";
 import { getUserList } from "@/api/test.js";
 export default {
   components: {
-    BaseSelect
+    VeSelect,
   },
   methods: {
     getUserList,
     formatData(res) {
       return res.data;
-    }
-  }
+    },
+  },
 };
 </script>

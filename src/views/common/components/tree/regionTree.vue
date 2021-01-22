@@ -41,7 +41,7 @@
     <base-tree
       ref="regionTree"
       :config="config"
-      :ElTreeAttrs="ElTreeAttrs"
+      :el="ElTreeAttrs"
       @select="handleSelect"
       v-if="!refresh"
     >
@@ -256,7 +256,7 @@ export default {
     // 设置默认勾选节点
     setCheckeds(data) {
       this.$nextTick(() => {
-        this.$refs.regionTree.$refs.tree.setCheckedKeys(
+        this.$refs.regionTree.eltree_ref.setCheckedKeys(
           data.map((item) => item.id),
           true
         );

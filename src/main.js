@@ -6,7 +6,7 @@ import "./styles/index.css";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
-import './utils/eventBus'
+// import './utils/eventBus'
 
 Vue.use(ElementUI);
 

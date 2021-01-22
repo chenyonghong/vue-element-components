@@ -57,7 +57,7 @@ export default {
       },
       tableConfig: {
         tableName: "testTable",
-        firstAutoRequest: false,
+        firstAutoRequest: true,
         filterable: true,
       },
       el: {
@@ -66,8 +66,7 @@ export default {
         },
         events: {
             'selection-change': this.selectionChange,
-            'select-all': this.selectAll,
-            'cell-click': this.cellClick
+            'select-all': this.selectAll
           }
       },
       requestConf: {
@@ -166,9 +165,6 @@ export default {
     };
   },
   methods: {
-    cellClick(row, column, cell, event) {
-      console.log(row, column, cell, event)
-    },
     selectAll(data) {
       console.log(data)
     },
@@ -179,7 +175,7 @@ export default {
       if (data) {
         data.projectName = `修改的项目${parseInt(Math.random() * 10000)}`;
         fetchProjectUpdate(data).then(({ code }) => {
-          if (code === 200) this.handleSearch(false);
+          if (code === 200) this.$refs.testTable.makeTable();
         });
       } else {
         const newProjectData = {
@@ -188,18 +184,17 @@ export default {
           projectManager: "陈七",
         };
         fetchProjectAdd(newProjectData).then(({ code }) => {
-          if (code === 200) this.handleSearch(false);
+          if (code === 200) this.$refs.testTable.makeTable();
         });
       }
     },
     handleDelete(id) {
       fetchProjectDelete({ id }).then(({ code }) => {
-        if (code === 200) this.handleSearch(false);
+        if (code === 200) this.$refs.testTable.makeTable();
       });
     },
-    handleSearch(resetPage=true) {
+    handleSearch() {
       this.requestConf.data = { ...this.searchForm };
-      this.$refs.testTable.refresh(resetPage);
     },
     handleReset() {
       Object.getOwnPropertyNames(this.searchForm).forEach((key) => {
@@ -216,17 +211,11 @@ export default {
   created() {
     BusFactory(this).$on("editClick", (data, index) => {
       console.log(data, index);
-      this.handleEdit(data);
     });
     BusFactory(this).$on("deleteClick", (data, index) => {
       console.log(data, index);
-      this.handleDelete(data.id);
     });
   },
-  mounted() {
-    // this.searchForm.projectManager = '张三';
-    this.handleSearch();
-  }
 };
 </script>
 

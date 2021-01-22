@@ -15,50 +15,79 @@
 
 #### 使用说明
 
-1.  ##### 下拉选择框BaseSelect:
-    | 参数 | 类型 | 默认值 | 说明 |
-    |--|--|--|--|
-    | el-select-attrs | object | { <br/>&ensp;clearable: true,<br/>&ensp;multiple: false,<br/>&ensp;collapseTags: true<br/>} | elementUI el-select的配置参数，例如：multiple、value-key、placeholder等 |
-    | itemProp | object | { value: "id", label: "name" } | 下拉选项主键、显示文本配置，例：{ value: "id", label: "name" } |
-    | remoteFunc | function | - | 调用远端服务器的接口函数，需返回Promise |
-    | remoteParams | - | - | 调用接口参数 |
-    | remoteFormat | function | - | 远程数据格式化函数 |
-    | autoRequest | boolean | true | 是否在初始化时自动请求数据 |
-    | remoteParamsNullable | boolean | true | 接口参数是否可空 |
-    | firstItem | object | - | 默认首项数据，例： { id: 0, name: "请选择" } |
-    | updateDefaultValue | boolean | - | 选中值为对象时，是否自动更新默认值数据, 仅当配置了value-key时生效 |
+1.  ##### 下拉选择框VeSelect:
+    | 参数         | 类型                | 默认值                                  | 说明               |
+    | ------------ | ------------------- | --------------------------------------- | ------------------ |
+    | el           | object              | 见defaultSettings文件                   | el-select参数      |
+    | config       | object              | 见defaultSettings文件                   | 拓展的配置参数     |
+    | remoteFunc   | function           ｜         - | 调用远端服务器的接口函数，需返回Promise |
+    | remoteParams | -                   | -                                       | 调用接口参数       |
+    | remoteFormat | function            | -                                       | 远程数据格式化函数 |
 
-    | 事件 | 说明 | 回调参数 |
-    |--|--|--|
-    | change | 选中项改变时触发 | 选中值 |
-2.  ##### 树形控件BaseTree:
-    | 参数 | 类型 | 默认值 | 说明 |
-    |--|--|--|--|
-    | el-tree-attrs | object | { <br/>&ensp;nodeKey: "id",<br/>&ensp;parentKey: "pid",<br/>&ensp;showCheckbox: true,<br/>&ensp;showCheckbox: true,<br/>&ensp;checkOnClickNode: true,<br/>&ensp;checkStrictly: true,<br/>&ensp;expandOnClickNode: false,<br/>&ensp;draggable: false,<br/>&ensp;defaultCheckedKeys: [],<br/>&ensp;defaultExpandedKeys: [],<br/>&ensp;props: {},<br/>&ensp;filterNodeMethod: ...,<br/>&ensp;load: ...<br/> } | elementUI el-tree的配置参数，预置了一些默认值，可自行修改 |
-    | config | object | { <br/>&ensp;filter: true,<br/>&ensp;allExpand: true,<br/>&ensp;showCheckAll: false,<br/>&ensp;showCheckedNum: true,<br/>&ensp;subNodeNumber: {show:false,onlySon:false},<br/>&ensp;remoteFunc、remoteParams、remoteFormat: ...<br/>&ensp;makeTreeFunc: ...,<br/>&ensp;renderBefore、renderAfter: ...<br/>&ensp;filterWithChildNodes: true,<br/>&ensp;sort: -,<br/>&ensp;sortKey: -,<br/> } | 额外添加的自定义配置参数:<br/>&ensp;filter: 是否显示搜索框（仅当使用默认搜索框生效，使用自定义slot时无效),<br/>&ensp;allExpand: 是否显示“全部展开/收起”功能,<br/>&ensp;showCheckAll: 是否显示全选框(多选生效),<br/>&ensp;showCheckedNum: 是否显示选择节点数量（多选生效）,<br/>&ensp;subNodeNumber: 是否显示子节点数量（懒加载无效,onlySon:只显示次级节点数量）,<br/>&ensp;remoteFunc、remoteParams、remoteFormat: 同下拉选择框,<br/>&ensp;makeTreeFunc: 造树函数,<br/>&ensp;renderBefore、renderAfter: 渲染树前后自定义函数,<br/>&ensp;filterWithChildNodes: 过滤节点时，是否显示匹配节点的子节点（懒加载无效）,<br/>&ensp;sort: 树渲染时是否对同级树节点进行排序,<br/>&ensp;sortKey: 排序参照键名,<br/><br/> |
+    | 事件   | 说明             | 回调参数 |
+    | ------ | ---------------- | -------- |
+    | change | 选中项改变时触发 | 选中值   |
 
-    | 事件 | 说明 | 回调参数 |
-    |--|--|--|
+    ###### Scoped Slot:
+    | name | 说明                             | 参数            |
+    | ---- | -------------------------------- | --------------- |
+    | -    | Option 组件列表（同element官方） | scope：选项数据 |
+2.  ##### 树形控件VeTree:
+    | 参数   | 类型   | 默认值                | 说明                        |
+    | ------ | ------ | --------------------- | --------------------------- |
+    | el     | object | 见defaultSettings文件 | elementUI el-tree的配置参数 |
+    | config | object | 见defaultSettings文件 | 拓展的配置参数              |
+
+    | 事件   | 说明               | 回调参数     |
+    | ------ | ------------------ | ------------ |
     | select | 选中节点改变时触发 | 选中节点数据 |
 
-    | 方法 | 说明 | 参数 |
-    |--|--|--|
-    | addNode | 往指定节点添加子节点，相当于element-tree的append | (nodeData, parentNode) 1.添加的节点数据，2.添加节点的父节点 |
-    | updateNode | 更新指定节点数据 | (nodeData) 添加的节点数据（必须带node-key字段） |
-    | deleteNode | 删除指定节点 | (dataId) 删除节点的node-key值 |
-    | search | 节点搜索 | (keyword) 关键词 |
-    | toggleExpand | 切换全部展开/收起 | - |
+    | 属性       | 说明                 |
+    | ---------- | -------------------- |
+    | eltree_ref | element-tree实例引用 |
+
+    | 方法         | 说明                                             | 参数                                                        |
+    | ------------ | ------------------------------------------------ | ----------------------------------------------------------- |
+    | addNode      | 往指定节点添加子节点，相当于element-tree的append | (nodeData, parentNode) 1.添加的节点数据，2.添加节点的父节点 |
+    | updateNode   | 更新指定节点数据                                 | (nodeData) 添加的节点数据（必须带node-key字段）             |
+    | deleteNode   | 删除指定节点                                     | (dataId) 删除节点的node-key值                               |
+    | search       | 节点搜索                                         | (keyword) 关键词                                            |
+    | toggleExpand | 切换全部展开/收起                                | -                                                           |
     
     ###### Scoped Slot:
-    | 方法 | 说明 | 参数 |
-    |--|--|--|
-    | search | 自定义搜索框,需手动调用search | - |
-    | self-tool-bar | 自定义工具栏内容 | - |
-    | node-append | 节点额外添加内容，如操作菜单等 | - |
+    | name          | 说明                           | 参数 |
+    | ------------- | ------------------------------ | ---- |
+    | search        | 自定义搜索框,需手动调用search  | -    |
+    | self-tool-bar | 自定义工具栏内容               | -    |
+    | node-append   | 节点额外添加内容，如操作菜单等 | -    |
 
     ###### 其它说明：
     1). 若覆盖element-tree中的懒加载load方法，则搜索方法也需自定义；
-3.  ##### 表格BaseTable
+3.  ##### 表格VeTable
+    | 参数        | 类型   | 默认值                | 说明                                                                                                                                                                                                                                                                                                                                                                        |
+    | ----------- | ------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | config      | object | 见defaultSettings文件 | 拓展的表格配置参数                                                                                                                                                                                                                                                                                                                                                          |
+    | requestConf | object | 见defaultSettings文件 | 后端接口请求和数据格式化相关配置                                                                                                                                                                                                                                                                                                                                            |
+    | columns     | array  |                       | 表格列配置参数，支持el-table-columns中的所有参数，另额外新增：<br/> 1.hidden: 布尔类型，是否隐藏该列（通常用于表格列自定义显示），<br/>2.alwaysShow: 布尔型，是否常驻该列（通常用于表格列自定义显示），<br/>3.template: 字符串类型，自定义渲染html模板，支持事件绑定，需引入文件夹下eventBus并监听，<br/>4.component: 自定义Vue组件，组件内获取表格数据用props属性scope接收 |
+    | el          | object | 见defaultSettings文件 | attrs：el-table属性，events：el-table事件                                                                                                                                                                                                                                                                                                                                   |
+    
+
+    | 事件                | 说明                           | 参数                           |
+    | ------------------- | ------------------------------ | ------------------------------ |
+    | refresh(boolean)    | 刷新表格数据                   | 传入布尔型参数表示是否重置页码 |
+    | setTableData(array) | 更新表格数据，一般用于本地分页 | 需要显示的表格数据，数组类型   |
+
+    ###### Scoped Slot:
+    | name     | 说明               | 参数 |
+    | -------- | ------------------ | ---- |
+    | handler  | 表格上方操作栏内容 | -    |
+    | defuault | 表格列数据         | -    |
+    
+    ###### 其它说明：
+    1. 如何获取el-table属性和调用el-table自带方法？获取你VeTable内的elTable引用即可拿到el-table实例。例：this.$refs['你的Vetable引用名'].$refs.elTable;
+    2. 表格列数据设置支持el-table原有的slot方式和配置columns参数方式，后者一般用于动态表格列显示；
+    3. 在使用columns配置表格时，如果使用template属性渲染单元格内容并绑定事件，需引入Table文件夹内的eventBus并绑定相应事件；
+    4. 表格列配置数据既可保存在浏览器本地也可以发送到远端服务器，并支持两种方案的初始化列数据显示，修改TableColumnFilter.vue获取和保存数据相关代码即可
 
 #### 参与贡献
 
