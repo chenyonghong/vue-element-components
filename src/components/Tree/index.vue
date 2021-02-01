@@ -87,7 +87,6 @@ export default {
       checkAll: false,
 
       refresh: false,
-      // eltree_ref: this.$refs.tree
     };
   },
 
@@ -117,7 +116,7 @@ export default {
       }
       return eleme;
     },
-    eltree_ref() {
+    ref_eltree() {
       return this.$refs.tree;
     },
   },

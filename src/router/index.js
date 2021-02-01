@@ -34,6 +34,18 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/table/index2.vue"),
   },
+  {
+    path: "/form",
+    name: "VeForm",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/form/index.vue"),
+  },
+  {
+    path: "/dialog",
+    name: "VeDialog",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/dialog/index.vue"),
+  },
 ];
 
 const router = new VueRouter({

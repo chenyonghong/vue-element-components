@@ -51,3 +51,11 @@ export function fetchProjectDelete(data) {
     data
   })
 }
+
+export function fetchRestaurants(data) {
+  return request({
+    url: 'test/getRestaurants',
+    method: 'post',
+    data
+  })
+}

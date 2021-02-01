@@ -6,10 +6,13 @@
       </div>
       <div class="menu-list">
         <router-link to="/">Home</router-link>
+        <router-link to="/table">表格</router-link>
+        <router-link to="/form">表单</router-link>
         <router-link to="/select">下拉选择框</router-link>
         <router-link to="/tree">树形控件</router-link>
-        <router-link to="/table">表格</router-link>
-        <router-link to="/table2">表格2</router-link>
+        <router-link to="/dialog">Dialog弹窗</router-link>
+        
+        <!-- <router-link to="/table2">表格2</router-link> -->
       </div>
     </div>
     <div class="app-main">

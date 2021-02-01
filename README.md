@@ -20,7 +20,7 @@
     | ------------ | ------------------- | --------------------------------------- | ------------------ |
     | el           | object              | 见defaultSettings文件                   | el-select参数      |
     | config       | object              | 见defaultSettings文件                   | 拓展的配置参数     |
-    | remoteFunc   | function           ｜         - | 调用远端服务器的接口函数，需返回Promise |
+    | remoteFunc   | function            |        -                             | 调用远端服务器的接口函数，需返回Promise |
     | remoteParams | -                   | -                                       | 调用接口参数       |
     | remoteFormat | function            | -                                       | 远程数据格式化函数 |
 
@@ -44,7 +44,7 @@
 
     | 属性       | 说明                 |
     | ---------- | -------------------- |
-    | eltree_ref | element-tree实例引用 |
+    | ref_eltree | element-tree实例引用 |
 
     | 方法         | 说明                                             | 参数                                                        |
     | ------------ | ------------------------------------------------ | ----------------------------------------------------------- |
@@ -84,7 +84,7 @@
     | defuault | 表格列数据         | -    |
     
     ###### 其它说明：
-    1. 如何获取el-table属性和调用el-table自带方法？获取你VeTable内的elTable引用即可拿到el-table实例。例：this.$refs['你的Vetable引用名'].$refs.elTable;
+    1. 如何获取el-table属性和调用el-table自带方法？获取你VeTable内的elTable引用即可拿到el-table实例。例:this.$refs['你的Vetable引用名'].ref_eltable;
     2. 表格列数据设置支持el-table原有的slot方式和配置columns参数方式，后者一般用于动态表格列显示；
     3. 在使用columns配置表格时，如果使用template属性渲染单元格内容并绑定事件，需引入Table文件夹内的eventBus并绑定相应事件；
     4. 表格列配置数据既可保存在浏览器本地也可以发送到远端服务器，并支持两种方案的初始化列数据显示，修改TableColumnFilter.vue获取和保存数据相关代码即可

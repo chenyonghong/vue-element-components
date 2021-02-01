@@ -1,6 +1,5 @@
 <template>
   <el-dialog
-    v-el-drag-dialog
     v-bind="Object.assign({}, defaultAttr, attr)"
     :visible.sync="show"
     v-on="$listeners"
@@ -21,13 +20,14 @@
     >
       <slot name="footer">
         <el-button type="info" @click="cancel">取消</el-button>
-        <el-button type="primary" @click="confirm" v-button>确定</el-button>
+        <el-button type="primary" @click="confirm">确定</el-button>
       </slot>
     </div>
   </el-dialog>
 </template>
 <script>
 export default {
+  name: "VeDialog",
   props: {
     visible: Boolean, // 传入的显示弹框标识
     footer: Object, // 底部配置
@@ -78,8 +78,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-::v-deep .el-dialog__body {
+<style scoped>
+.el-dialog >>> .el-dialog__body {
   padding: 20px;
 }
 </style>

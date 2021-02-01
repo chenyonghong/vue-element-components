@@ -120,6 +120,9 @@ export default {
   },
 
   computed: {
+    ref_eltable() {
+      return this.$refs.elTable
+    },
     element() {
       return assignDeep({}, defaultEl, this.el);
     },
