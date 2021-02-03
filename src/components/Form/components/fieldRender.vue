@@ -3,13 +3,10 @@
 // import Vue from "vue";
 // import { fieldElConfig } from "../defaultSettings";
 import { isPlainObject, cloneDeep, assignDeep } from "../../utils";
-import { Fragment } from "vue-fragment";
-import TemplateRender from "../TemplateRender";
 
 export default {
   name: "fieldRender",
   props: ["params", "defaultValue"],
-  components: { Fragment, TemplateRender },
   data() {
     return {
       value: "",
@@ -35,20 +32,6 @@ export default {
       // 自定义列slot
       if (this.$slots.default) {
         slots = slots.concat(this.$slots.default);
-      }
-      // 自定义子元素模板
-      if (config.el.template) {
-        // console.log(config.el.template)
-        //   const com = Vue.extend({
-        //     components: {Fragment},
-        //     props: ['node', 'data'],
-        //     template: `<fragment>${config.el.template}</fragment>`,
-        //   });
-        // return h(com);
-      }
-      if (config.el.template) {
-        slots.push(<template-render html={this.params.el.template} />);
-        return slots;
       }
 
       if (!config.options) {

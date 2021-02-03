@@ -144,9 +144,6 @@ import {
   fieldElConfig as globalFieldEl,
 } from "./defaultSettings";
 import { assignDeep, cloneDeep } from "../utils";
-// import TemplateRender from './TemplateRender.vue';
-
-// import { Fragment } from "vue-fragment";
 
 // 需要包裹一层div(或其他标签)的el元素类型
 const wrapDivEl = {
