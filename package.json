@@ -1,6 +1,7 @@
 {
   "name": "vue-element-components",
   "version": "0.1.0",
+  "author": "seven chan",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
