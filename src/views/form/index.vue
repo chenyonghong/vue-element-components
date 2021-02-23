@@ -175,8 +175,8 @@
 </template>
 
 <script>
-import VeForm from "@/components/Form";
-import TestGender from "@/components/Form/components/testGenger.vue";
+import VeForm from "pkgs/Form/src/index.vue";
+import TestGender from "pkgs/Form/src/components/testGenger.vue";
 import userSelector from "@/views/common/components/select/userSelector";
 import { getUserList, fetchRestaurants } from "@/api/test";
 // import OrgzDialog from "@/views/common/components/dialog/orgz.vue";

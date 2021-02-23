@@ -1,7 +1,7 @@
 <script>
 import Vue from "vue";
-import { cloneDeep } from "./utils";
-import BusFactory from "./eventBus";
+import { cloneDeep } from "@/utils/utils";
+import BusFactory from "@/utils/eventBus";
 
 export default {
   props: {

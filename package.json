@@ -1,14 +1,19 @@
 {
   "name": "vue-element-components",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.3.0",
+  "author": "cyh",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name vue-element-components --dest lib ./packages/index.js"
   },
+  "main": "lib/vue-element-components.common.js",
   "dependencies": {
+    "babel-plugin-component": "^0.11.0",
     "core-js": "^3.6.5",
+    "element-ui": "^2.14.1",
     "sortablejs": "^1.10.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
@@ -22,7 +27,6 @@
     "@vue/cli-service": "~4.5.0",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
-    "element-ui": "^2.14.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-markdown-loader": "^2.4.1",

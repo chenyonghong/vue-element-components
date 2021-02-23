@@ -35,14 +35,14 @@
 </template>
 
 <script>
-import VeTable from "@/components/Table/index.vue";
+import VeTable from "pkgs/Table/src/index.vue";
 import {
   fetchTableList,
   fetchProjectAdd,
   fetchProjectUpdate,
   fetchProjectDelete,
 } from "@/api/test";
-import BusFactory from "@/components/Table/eventBus";
+import BusFactory from "@/utils/eventBus";
 
 export default {
   components: {

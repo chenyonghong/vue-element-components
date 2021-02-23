@@ -53,4 +53,5 @@ const assignDeep = function() {
 	return result;
 }
 
+
 export { isPlainObject, cloneDeep, assignDeep }

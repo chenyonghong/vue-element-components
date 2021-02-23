@@ -27,7 +27,7 @@
     </ve-dialog>
 </template>
 <script>
-import VeDialog from "@/components/Dialog/index.vue";
+import VeDialog from "pkgs/Dialog/src/index.vue";
 export default {
     name: "DeviceDialog",
     components: {

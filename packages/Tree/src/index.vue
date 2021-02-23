@@ -68,7 +68,7 @@
 <script>
 import Browser from "@/utils/browser";
 import { defaultEl, defaultConfig } from "./defaultSettings";
-import { assignDeep } from "../utils";
+import { assignDeep } from "@/utils/utils";
 export default {
   name: "VeTree",
   props: {

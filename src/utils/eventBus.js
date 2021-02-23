@@ -105,11 +105,11 @@ const BusFactory = vm => {
 BusFactory.$emit = (...params) => Bus.$emit(...params)
 BusFactory.$once = (...params) => Bus.$once(...params)
 
-Vue.mixin({
-  data(){
-    return {
-      Bus: BusFactory(this)
-    }
-  }
-})
+// Vue.mixin({
+//   data(){
+//     return {
+//       Bus: BusFactory(this)
+//     }
+//   }
+// })
 export default BusFactory

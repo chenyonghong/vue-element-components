@@ -44,14 +44,14 @@ export default {
       type: Number,
       default: 18,
     },
-    minPercent:{
-      type:Number,
-      default:18
+    minPercent: {
+      type: Number,
+      default: 18,
     },
     // 方向，vertical默认竖直, horizontal水平
-    split:{
-      type:String,
-      default:'vertical'
+    split: {
+      type: String,
+      default: "vertical",
     },
     resize: Function,
   },
@@ -99,23 +99,19 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .vue-splitter-container {
   height: 100%;
   position: relative;
 }
-
 .pane-content {
   flex: 1;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  // height: calc(100% - #{20px});
 }
-.vue-splitter-container {
-  ::v-deep .splitter-paneL {
-    overflow: hidden;
-  }
+.vue-splitter-container >>> .splitter-paneL {
+  overflow: hidden;
 }
 .pleft {
   height: 100%;
@@ -124,16 +120,13 @@ export default {
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  ::v-deep {
-    > div {
-      height: 100%;
-    }
-  }
-  &.padding {
-    // margin: 20px;
-    padding: 20px;
-    // margin-right: 0;
-  }
+}
+.pleft >>> div {
+  height: 100%;
+}
+
+.pleft.padding {
+  padding: 20px;
 }
 .pright {
   height: 100%;
@@ -144,7 +137,7 @@ export default {
   height: 6px;
   background-color: #f5f5f5;
 }
-.pane-content ::v-deep .splitter-pane-resizer {
+.pane-content >>> .splitter-pane-resizer {
   transform: translateX(-15px);
   opacity: 0;
 }
@@ -156,11 +149,10 @@ export default {
   transform: rotate(90deg);
   color: #c5c5c5;
 }
-.pane-content ::v-deep .splitter-pane {
+.pane-content >>> .splitter-pane {
   overflow: hidden;
 }
-.pane-content ::v-deep .splitter-pane.vertical.splitter-paneL {
-  //padding-right: 10px;
+.pane-content >>> .splitter-pane.vertical.splitter-paneL {
   padding-right: 14px;
 }
 .toggle-span {
@@ -171,28 +163,19 @@ export default {
   z-index: 4;
   width: 0;
   height: 50px;
-  border-left: 14px solid rgba($color: #000000, $alpha: 0.4);
+  border-left: 14px solid rgba(#000000, 0.4);
   border-top: 11px solid transparent;
   border-bottom: 11px solid transparent;
   color: #fff;
-  .arrow-i {
-    position: absolute;
-    top: 50%;
-    left: -15px;
-    z-index: 2;
-    transform: translateY(-50%);
-  }
-  &:hover {
-    border-left: 14px solid rgba($color: #000000, $alpha: 0.6);
-  }
 }
-
-// @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-//   /* IE10+ specific styles go here */
-//   .pane-content {
-//     position: absolute;
-//     width: calc(100% - #{50px});
-//     height: calc(100% - #{144px});
-//   }
-// }
+.toggle-span .arrow-i {
+  position: absolute;
+  top: 50%;
+  left: -15px;
+  z-index: 2;
+  transform: translateY(-50%);
+}
+.toggle-span:hover {
+  border-left: 14px solid rgba(#000000, 0.6);
+}
 </style>

@@ -2,7 +2,7 @@
 <script>
 // import Vue from "vue";
 // import { fieldElConfig } from "../defaultSettings";
-import { isPlainObject, cloneDeep, assignDeep } from "../../utils";
+import { isPlainObject, cloneDeep, assignDeep } from "@/utils/utils";
 
 export default {
   name: "fieldRender",

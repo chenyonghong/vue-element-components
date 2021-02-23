@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import BaseTree from "@/components/Tree";
+import BaseTree from "pkgs/Tree/src";
 import { fetchRegionAll, fetchRegionList } from "@/api/test";
 export default {
   components: {

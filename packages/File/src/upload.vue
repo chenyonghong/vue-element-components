@@ -143,9 +143,8 @@
 <script>
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
-import { uploadFile } from "@/api/common";
-import aliOss from "@/utils/oss";
-// import { createRequestMeta } from "@/utils/index";
+// import aliOss from "@/utils/oss";
+import { cloneDeep } from "@/utils/utils";
 
 export default {
   name: "uploader",
@@ -246,7 +245,7 @@ export default {
 
   methods: {
     // 移除已上传文件
-    handleRemove(file, fileList) {
+    handleRemove(file) {
       let index = -1;
       this.fileList.filter((item, idx) => {
         if (item.fileId === file.fileId) {
@@ -272,7 +271,7 @@ export default {
         return;
       }
 
-      let that = this;
+      // let that = this;
       const file = params.file,
         form = new FormData();
       if (this.onlyImage && this.fileTypeFunc(file.name) !== 1) {
@@ -281,42 +280,44 @@ export default {
       // 文件对象
       form.append("file", file);
 
-      const fileName = Date.parse(new Date()) + file.name;
-      aliOss
-        .put(fileName, file)
-        .then((res) => {
-          const { name, url } = res;
-          let copy = _.cloneDeep(that.fileList);
-          copy.forEach((item) => {
-            if (fileName.includes(item.name) && !item.fileId) {
-              // 单文件上传
-              item.fileId = url;
-              item.fileName = name;
-              item.filePath = url;
-              item.isUpload = true;
-            }
-          });
-          that.fileList = copy;
-          //当上传文件数量标识已满，图片上传隐藏
-          if (this.openDeleteShow && this.fileList.length === this.limit) {
-            // this.$emit("open_show", false, this.fileList.length);
-            this.open_show = false;
-          }
-          that.$emit("change", that.fileList);
+      // const fileName = Date.parse(new Date()) + file.name;
+      
+      // aliOss
+      //   .put(fileName, file)
+      //   .then((res) => {
+      //     const { name, url } = res;
+      //     let copy = cloneDeep(that.fileList);
+      //     copy.forEach((item) => {
+      //       if (fileName.includes(item.name) && !item.fileId) {
+      //         // 单文件上传
+      //         item.fileId = url;
+      //         item.fileName = name;
+      //         item.filePath = url;
+      //         item.isUpload = true;
+      //       }
+      //     });
+      //     that.fileList = copy;
+      //     //当上传文件数量标识已满，图片上传隐藏
+      //     if (this.openDeleteShow && this.fileList.length === this.limit) {
+      //       // this.$emit("open_show", false, this.fileList.length);
+      //       this.open_show = false;
+      //     }
+      //     that.$emit("change", that.fileList);
 
-          this.$message.success("上传成功");
-        })
-        .catch((error) => {
-          let i;
-          that.fileList.map((item, index) => {
-            if (item.uid === file.uid) {
-              i = index;
-            }
-          });
-          if (i) {
-            that.fileList.splice(i, 1);
-          }
-        });
+      //     this.$message.success("上传成功");
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     let i;
+      //     that.fileList.map((item, index) => {
+      //       if (item.uid === file.uid) {
+      //         i = index;
+      //       }
+      //     });
+      //     if (i) {
+      //       that.fileList.splice(i, 1);
+      //     }
+      //   });
     },
 
     // input的change事件触发
@@ -335,7 +336,7 @@ export default {
           this.hintting = false;
           this.$alert(`最多上传${this.limit}个文件`, "提示", {
             confirmButtonText: "好的",
-            callback: (action) => {
+            callback: () => {
               this.hintting = true;
             },
           });
@@ -459,8 +460,8 @@ export default {
   },
   watch: {
     file: {
-      handler(newVal, oldVal) {
-        let copy = _.cloneDeep(newVal);
+      handler(newVal) {
+        let copy = cloneDeep(newVal);
         copy.forEach((item) => {
           // item.fileId = item.id;
           item.isUpload = true;
@@ -479,166 +480,164 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .el-upload {
   display: flex;
   position: relative;
-  // padding-top: 40px;
   flex-wrap: wrap;
-  // min-width: 300px;
-  .el-upload__tip {
-    position: absolute;
-    top: 5px;
-    left: 0;
-    height: auto;
-    line-height: normal;
-    color: #999;
-  }
-
-  .el-upload-file {
-    overflow: hidden;
-    background-color: #fff;
-    border: 1px solid #c0ccda;
-    border-radius: 6px;
-    box-sizing: border-box;
-    width: 148px;
-    height: 148px;
-    margin: 0 8px 8px 0;
-    position: relative;
-  }
-
-  .el-upload-list__item-thumbnail {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
-    transform: translate(-50%, -50%);
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .el-upload-list__item-actions {
-    z-index: 3;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s;
-    display: none;
-  }
-
-  .el-upload-file:hover .el-upload-list__item-actions {
-    display: flex;
-  }
-
-  .el-upload-btn {
-    margin-right: 8px;
-    margin-bottom: 8px;
-
-    ::v-deep .el-upload-dragger {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border: 0;
-
-      .el-icon-upload {
-        line-height: 26px;
-      }
-
-      .el-upload__text {
-        position: absolute;
-        bottom: 10px;
-        left: 5%;
-        right: 5%;
-        width: 90%;
-        height: 48px;
-        line-height: 24px;
-        font-size: 14px;
-      }
-    }
-  }
-
-  .el-handle-icon {
-    font-size: 40px;
-    cursor: pointer;
-    padding: 0 9px;
-  }
-
-  .other-file {
-    color: #999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 21px;
-  }
-
-  .other-file .el-icon-document,
-  .other-file .el-icon-film,
-  .other-file .iconlaba {
-    font-size: 68px;
-  }
-
-  .iconlaba {
-    margin-top: 23px;
-    margin-bottom: 37px;
-  }
-
-  .el-icon-film {
-    margin-bottom: 15px;
-  }
-
-  .other-file span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 85%;
-    text-align: center;
-  }
-
-  .uploading-text {
-    color: #999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    height: 100%;
-  }
-
-  .zt-upload-video {
-    text-align: center;
-  }
-
-  .el-no-tips {
-    padding-top: 0;
-  }
-
-  .zt-el-tooltip-class {
-    max-width: 500px;
-    word-break: break-all;
-    word-wrap: break-word;
-  }
-  .el-icon-headset {
-    font-size: 68px;
-    margin: 10px 0;
-  }
 }
+.el-upload .el-upload__tip {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  height: auto;
+  line-height: normal;
+  color: #999;
+}
+
+.el-upload .el-upload-file {
+  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid #c0ccda;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: 148px;
+  height: 148px;
+  margin: 0 8px 8px 0;
+  position: relative;
+}
+
+.el-upload .el-upload-list__item-thumbnail {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.el-upload-list__item-actions {
+  z-index: 3;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s;
+  display: none;
+}
+
+.el-upload-file:hover .el-upload-list__item-actions {
+  display: flex;
+}
+
+.el-upload-btn {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.el-upload-btn >>> .el-upload-dragger {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.el-upload-btn .el-icon-upload {
+  line-height: 26px;
+}
+
+.el-upload-btn .el-upload__text {
+  position: absolute;
+  bottom: 10px;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  height: 48px;
+  line-height: 24px;
+  font-size: 14px;
+}
+
+.el-handle-icon {
+  font-size: 40px;
+  cursor: pointer;
+  padding: 0 9px;
+}
+
+.other-file {
+  color: #999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 21px;
+}
+
+.other-file .el-icon-document,
+.other-file .el-icon-film,
+.other-file .iconlaba {
+  font-size: 68px;
+}
+
+.iconlaba {
+  margin-top: 23px;
+  margin-bottom: 37px;
+}
+
+.el-icon-film {
+  margin-bottom: 15px;
+}
+
+.other-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 85%;
+  text-align: center;
+}
+
+.uploading-text {
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  height: 100%;
+}
+
+.zt-upload-video {
+  text-align: center;
+}
+
+.el-no-tips {
+  padding-top: 0;
+}
+
+.zt-el-tooltip-class {
+  max-width: 500px;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.el-icon-headset {
+  font-size: 68px;
+  margin: 10px 0;
+}
+
 .audio-player {
   width: 100%;
-  &:focus {
-    outline: none;
-  }
 }
+.audio-player:focus {
+  outline: none;
+}
+
 .video-player {
   width: 100%;
   max-height: 600px;
-  &:focus {
-    outline: none;
-  }
+}
+.video-player:focus {
+  outline: none;
 }
 </style>

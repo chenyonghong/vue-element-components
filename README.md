@@ -11,22 +11,35 @@
 3. axios（理论上兼容其它基于Promise的网络请求库)
 
 #### 安装教程
+NPM:
+1.  ```
+    npm install vue-element-components
+    ```
+2.  main.js引入vue-element-components:
+   ```
+    import VeComponents from "vue-element-components";
+    import "element-ui/lib/theme-chalk/index.css";
+    import "vue-element-components/lib/vue-element-components.css";
+    Vue.use(VeComponents);
+   ```
+3.  引用组件。
    
+克隆项目:
 1.  下载或克隆本项目到本地；
-2.  将src/components文件夹内文件及其它依赖文件拷贝到开发项目中；
+2.  将根目录下packages文件夹内文件及其它依赖文件拷贝到开发项目中；
 3.  配置组件默认参数，或根据自身需求修改源码；
 4.  引用组件。
 
 #### 使用说明
 
 1.  ##### 下拉选择框VeSelect:
-    | 参数         | 类型                | 默认值                                  | 说明               |
-    | ------------ | ------------------- | --------------------------------------- | ------------------ |
-    | el           | object              | 见defaultSettings文件                   | el-select参数      |
-    | config       | object              | 见defaultSettings文件                   | 拓展的配置参数     |
-    | remoteFunc   | function            |        -                             | 调用远端服务器的接口函数，需返回Promise |
-    | remoteParams | -                   | -                                       | 调用接口参数       |
-    | remoteFormat | function            | -                                       | 远程数据格式化函数 |
+    | 参数         | 类型     | 默认值                | 说明                                    |
+    | ------------ | -------- | --------------------- | --------------------------------------- |
+    | el           | object   | 见defaultSettings文件 | el-select参数                           |
+    | config       | object   | 见defaultSettings文件 | 拓展的配置参数                          |
+    | remoteFunc   | function | -                     | 调用远端服务器的接口函数，需返回Promise |
+    | remoteParams | -        | -                     | 调用接口参数                            |
+    | remoteFormat | function | -                     | 远程数据格式化函数                      |
 
     | 事件   | 说明             | 回调参数 |
     | ------ | ---------------- | -------- |

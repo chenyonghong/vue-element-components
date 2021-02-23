@@ -75,7 +75,7 @@ import request from "@/utils/request";
 import { defaultConfig, defaultEl, defaultPagination } from "./defaultSettings";
 import TemplateRender from "./TemplateRender.vue";
 import ColumnsFilter from "./TableColunmFilter.vue";
-import { cloneDeep, assignDeep } from "./utils";
+import { cloneDeep, assignDeep } from "@/utils/utils";
 
 export default {
   name: "VeTable",

@@ -21,7 +21,7 @@
 </template>
 <script>
 import CommonDialog from '../common/components/dialog/commonDialog.vue';
-import VeDialog from "@/components/Dialog/index.vue";
+import VeDialog from "pkgs/Dialog/src/index.vue";
 export default {
    components: {
       CommonDialog,

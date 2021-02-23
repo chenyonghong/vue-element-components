@@ -50,7 +50,7 @@
 
 <script>
 import Sortable from "sortablejs";
-import { cloneDeep } from "./utils";
+import { cloneDeep } from "@/utils/utils";
 
 export default {
   props: {

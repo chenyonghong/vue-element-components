@@ -18,7 +18,7 @@
 </template>
 <script>
 import { defaultEl, defaultConfig } from "./defaultSettings";
-import { assignDeep, cloneDeep } from "./utils";
+import { assignDeep, cloneDeep } from "@/utils/utils";
 export default {
   name: "VeSelect",
   props: {
