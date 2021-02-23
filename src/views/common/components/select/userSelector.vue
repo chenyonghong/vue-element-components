@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import VeSelect from "@/components/Select";
+import VeSelect from "pkgs/Select/src";
 import { getUserList } from "@/api/test.js";
 export default {
   components: {
