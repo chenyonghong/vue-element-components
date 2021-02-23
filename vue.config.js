@@ -1,10 +1,10 @@
 const path = require("path");
 module.exports = {
   runtimeCompiler: true,
-  // publicPath: process.env.NODE_ENV === 'production'
-  //   ? '/vue-element-components/'
-  //   : '/',
-  publicPath: '/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/vue-element-components/'
+    : '/',
+  // publicPath: '/',
     configureWebpack: {
       resolve: {
           alias: {
