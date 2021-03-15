@@ -173,13 +173,15 @@ export default {
   },
   computed: {
     formConfig() {
-      return this.assignDeep({}, defaultFormConf, this.config);
+      const userDefault = this.$options.configure ? this.$options.configure.config || {} : {};
+      return this.assignDeep({}, defaultFormConf, userDefault, this.config);
     },
     elForm() {
       return this.$refs.elForm;
     },
     fieldLayout() {
-      return Object.assign({}, globalFieldLayout, this.formConfig.fieldLayout);
+      const userDefault = this.$options.configure ? this.$options.configure.layout || {} : {};
+      return Object.assign({}, globalFieldLayout, userDefault, this.formConfig.fieldLayout);
     },
   },
   /**
@@ -209,8 +211,10 @@ export default {
   methods: {
     getFieldParams(params) {
       let p = cloneDeep(params);
+      const userDefault = this.$options.configure ? this.$options.configure.el || {} : {};
       p.el = assignDeep(
         globalFieldEl[p.type],
+        userDefault,
         wrapDivEl[p.type] || {},
         p.el || {}
       );

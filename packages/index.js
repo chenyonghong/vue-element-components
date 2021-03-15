@@ -19,8 +19,9 @@ const components = [
     tree
 ]
 
-const install = function (Vue) {
+const install = function (Vue, options) {
     components.forEach(component => {
+        component.configure =  options[component.name];
         Vue.component(component.name, component);
     });
 }
@@ -28,7 +29,6 @@ const install = function (Vue) {
 if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
 }
-
 export default {
     install,
     dialog,

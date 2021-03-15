@@ -93,7 +93,8 @@ export default {
   computed: {
     // 合并后的拓展配置项
     baseConf() {
-      const config = assignDeep({}, defaultConfig, this.config);
+      const userDefault = this.$options.configure ? this.$options.configure.config || {} : {};
+      const config = assignDeep({}, defaultConfig, userDefault, this.config);
       if (!this.eleme.lazy && !config.makeTreeFunc) {
         config.makeTreeFunc = (data) => {
           const parentNode = data.filter((a) => a.isTop);
@@ -107,7 +108,8 @@ export default {
     },
     // 合并后的el-tree配置项
     eleme() {
-      const eleme = assignDeep({}, defaultEl, this.el);
+      const userDefault = this.$options.configure ? this.$options.configure.el || {} : {};
+      const eleme = assignDeep({}, defaultEl, userDefault, this.el);
       if (eleme.lazy && !eleme.load) {
         eleme.load = this.defaultLoadFunc;
       }

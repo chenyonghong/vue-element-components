@@ -20,7 +20,21 @@ NPM:
     import VeComponents from "vue-element-components";
     import "element-ui/lib/theme-chalk/index.css";
     import "vue-element-components/lib/vue-element-components.css";
+    
+    // 1. 不设置全局参数
     Vue.use(VeComponents);
+    // 2. 配置组件全局默认参数
+    const options = {
+        VeForm: {
+            el: ...,
+            config: ...
+        },
+        VeTable: {
+            config: ...,
+            pagination: ...
+        }
+    }
+    Vue.use(VeComponents, options)
    ```
 3.  引用组件。
    

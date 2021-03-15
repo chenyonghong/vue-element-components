@@ -30,7 +30,8 @@ export default {
   },
   computed: {
     element() {
-      const ele = assignDeep({}, defaultEl, this.el);
+      const userDefault = this.$options.configure ? this.$options.configure.el || {} : {};
+      const ele = assignDeep({}, defaultEl, userDefault, this.el);
       if (!ele.events) ele.events = {};
       // 如有自定义change事件，先执行handleSelect方法再执行自定义事件
       const customEventChange = cloneDeep(ele.events.change),
@@ -50,7 +51,8 @@ export default {
       return ele;
     },
     veConf() {
-      return assignDeep({}, defaultConfig, this.config);
+      const userDefault = this.$options.configure ? this.$options.configure.config || {} : {};
+      return assignDeep({}, defaultConfig, userDefault, this.config);
     },
   },
   data() {

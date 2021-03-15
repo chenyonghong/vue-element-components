@@ -56,7 +56,7 @@
         v-if="tableConf.pagination"
         :current-page.sync="curPage"
         :total="total"
-        v-bind="defaultPagination"
+        v-bind="pageInfo"
         @size-change="handleSizeChange"
       ></el-pagination>
     </div>
@@ -92,7 +92,7 @@ export default {
 
   data() {
     return {
-      defaultPagination,
+      // defaultPagination,
       randomId: "",
       // 默认的网络请求参数
       defaultRequestConf: {
@@ -124,7 +124,8 @@ export default {
       return this.$refs.elTable
     },
     element() {
-      return assignDeep({}, defaultEl, this.el);
+      const userDefault = this.$options.configure ? this.$options.configure.el || {} : {};
+      return assignDeep({},  defaultEl, userDefault, this.el);
     },
     request() {
       return assignDeep({}, this.defaultRequestConf, this.requestConf);
@@ -151,7 +152,12 @@ export default {
     },
     // 现有的表格配置项
     tableConf() {
-      return Object.assign(defaultConfig, this.config);
+      const userDefault = this.$options.configure ? this.$options.configure.config || {} : {};
+      return Object.assign(defaultConfig, userDefault, this.config);
+    },
+    pageInfo() {
+      const userDefault = this.$options.configure ? this.$options.configure.pagination || {} : {};
+      return assignDeep({}, defaultPagination, userDefault);
     },
     // 当前表格调用形式，1：传递columns属性 2.传递slot
     mode() {

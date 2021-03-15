@@ -1,3 +1,6 @@
+
+// import Settings from "pkgs/defaultSettings";
+
 // 表格拓展默认配置
 const defaultConfig = {
     tableName: "",
@@ -7,6 +10,7 @@ const defaultConfig = {
     firstAutoRequest: false,
     filterable: false,
 }
+
 // 默认的element-table参数
 const defaultEl = {
     attrs: {
@@ -17,7 +21,7 @@ const defaultEl = {
         rowKey: "id",
     },
     events: {
-        'selection-change': ()=> { console.log('abc') },
+        'selection-change': () => { console.log('abc') },
     }
 }
 // 默认分页配置
