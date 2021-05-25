@@ -26,7 +26,7 @@ const defaultEl = {
 }
 // 默认分页配置
 const defaultPagination = {
-    'page-sizes': [10, 20, 50, 100],
+    'page-sizes': [10, 20, 30, 50],
     'page-size': 10,
     'page-count': 7,
     layout: 'total, sizes, prev, pager, next, jumper',

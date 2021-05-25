@@ -6,12 +6,30 @@ module.exports = {
     : '/',
   // publicPath: '/',
     configureWebpack: {
+      // entry: './packages/index.js',
       resolve: {
           alias: {
               "@": path.resolve("src"),
               "pkgs": path.resolve("packages"),
           }
       },
+      devtool: 'none',
+      output: {
+        library: 'vue-element-components',
+      },
+      // optimization: {
+      //   splitChunks: {
+      //     chunks: 'all',
+      //   },
+      // },
+      externals: [
+          'sortablejs',
+          'vue',
+          'vuex',
+          'vue-router',
+          'element-ui',
+          'core-js'
+      ]
   },
   chainWebpack: config => {
     config.module.rule('md')
@@ -24,5 +42,6 @@ module.exports = {
       .options({
         raw: true
       })
-  }
+  },
+  
 }
