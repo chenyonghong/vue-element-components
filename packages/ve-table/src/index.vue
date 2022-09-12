@@ -21,8 +21,8 @@
     />
   </div>
 </template>
-<script setup lang="ts">
-import useInitData from "@/hooks/useInitData";
+<script setup lang="ts" name="VeTable">
+import useInitData from "./hooks/useInitData";
 import {
   PropType,
   toRefs,
@@ -38,10 +38,10 @@ import {
   nextTick,
 } from "vue";
 import tableCore from "./table.vue";
-import { TTableData, ExposeAttrs } from "@/types/table.d";
-import { IConfig, IRes, IReq } from "@/types/common.d";
+import { TTableData, ExposeAttrs } from "./types/table.d";
+import { IConfig, IRes, IReq } from "./types/common.d";
 import { ElTable } from "element-plus";
-import { isNullable } from "@/utils";
+import { isNullable } from "pkg/utils";
 
 const props = defineProps({
   config: {

@@ -1,12 +1,29 @@
 {
-  "name": "vue-element-components2",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "vue-element-components",
+  "version": "0.4.8",
+  "private": false,
+  "keywords": [
+    "vue-element",
+    "vue-element-components",
+    "vue-components",
+    "element-components"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/vue-element-components.umd.js",
+  "module": "lib/vue-element-components.mjs",
+  "exports": {
+    "./lib/style.css": "./lib/style.css",
+    ".": {
+      "import": "./lib/vue-element-components.mjs",
+      "require": "./lib/vue-element-components.umd.js"
+    }
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -15,11 +32,13 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.0",
+    "@vitejs/plugin-vue-jsx": "^2.0.1",
     "json5": "^2.2.1",
     "mockjs": "^1.1.0",
     "typescript": "^4.6.4",
     "vite": "^3.1.0",
     "vite-plugin-mock": "^2.9.6",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-tsc": "^0.40.4"
   }
 }

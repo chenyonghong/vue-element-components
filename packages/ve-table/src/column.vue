@@ -7,7 +7,7 @@
       <slot :name="'column-' + otherProps.prop" v-bind="scope" />
     </template>
     <template v-if="children">
-      <column v-for="child in children" :key="child.prop" :column="child">
+      <ve-table-column v-for="child in children" :key="child.prop" :column="child">
         <template
           v-for="(item, key, index) in $slots"
           :key="index"
@@ -15,13 +15,13 @@
         >
           <slot :name="key" v-bind="slotScope"></slot>
         </template>
-      </column>
+      </ve-table-column>
     </template>
   </el-table-column>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="ve-table-column">
 import { defineProps, PropType, toRefs, useSlots, computed } from "vue";
-import { IColumn, TTableData } from "@/types/table.d";
+import { IColumn, TTableData } from "./types/table.d";
 
 const props = defineProps({
   column: {

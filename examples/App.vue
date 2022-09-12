@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, watchEffect, nextTick } from "vue";
-import VeTable from "./components/table/index.vue";
+import { VeTable } from "../packages";
 import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
 interface User {
   name: string;

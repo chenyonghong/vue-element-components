@@ -7,7 +7,7 @@
     @selection-change="handleSelectionChange"
   >
     <slot name="left"></slot>
-    <column v-for="column in showColumns" :column="column">
+    <ve-table-column v-for="column in showColumns" :column="column">
       <template
         v-for="(item, key, index) in columnSlots"
         :key="index"
@@ -15,12 +15,12 @@
       >
         <slot :name="key" v-bind="slotScope"></slot>
       </template>
-    </column>
+    </ve-table-column>
     <slot name="right" />
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="table_instance">
 import {
   defineProps,
   useAttrs,
@@ -35,9 +35,9 @@ import {
   useSlots,
   type Slot,
 } from "vue";
-import { IColumn, TTableData, ExposeAttrs } from "../../types/table.d";
+import { IColumn, TTableData, ExposeAttrs } from "./types/table.d";
 import { ElTable } from "element-plus";
-import column from "./column.vue";
+import VeTableColumn from "./column.vue";
 
 const props = defineProps({
   data: {
@@ -60,7 +60,7 @@ const { columns, data } = toRefs(props);
 const showColumns = computed<IColumn<TTableData>[]>(() => {
   // 使用data的数据作为默认columns
   if (!columns.value.length && data.value.length) {
-    let ret = [];
+    let ret: any[] = [];
     for (let dataKey in data.value[0]) {
       ret.push({
         prop: dataKey,

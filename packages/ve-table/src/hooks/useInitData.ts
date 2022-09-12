@@ -1,7 +1,7 @@
 import axios from "axios";
 import { type Ref, ref, onMounted, watch } from "vue";
-import { isNullableArray, isNullable } from "@/utils";
-import { IApi, IConfig, IData, IRes } from "@/types/common.d";
+import { isNullableArray, isNullable } from "pkg/utils";
+import { IApi, IConfig, IData, IRes } from "../types/common.d";
 
 export default function <T>(
   props: Readonly<{
