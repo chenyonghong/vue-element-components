@@ -1,54 +1,25 @@
 {
-  "name": "vue-element-components",
-  "version": "0.3.1",
-  "author": "cyh",
-  "private": false,
+  "name": "vue-element-components2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name vue-element-components --dest lib ./packages/index.js"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
-  "main": "lib/vue-element-components.common.js",
   "dependencies": {
-    "babel-plugin-component": "^0.11.0",
-    "core-js": "^3.6.5",
-    "element-ui": "^2.14.1",
-    "sortablejs": "^1.10.2",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "axios": "^0.27.2",
+    "element-plus": "^2.2.16",
+    "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "^4.5.9",
-    "@vue/cli-plugin-vuex": "^4.5.9",
-    "@vue/cli-service": "~4.5.0",
-    "axios": "^0.21.1",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-markdown-loader": "^2.4.1",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@vitejs/plugin-vue": "^3.1.0",
+    "json5": "^2.2.1",
+    "mockjs": "^1.1.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vite-plugin-mock": "^2.9.6",
+    "vue-tsc": "^0.40.4"
+  }
 }
