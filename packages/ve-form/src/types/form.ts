@@ -5,7 +5,7 @@ export interface IFormConfig {
     grid?: Record<string, any>,
     rules?: Record<string, any[]>,
     instance?: any,
-    footerCol: any,
+    footerCol?: any,
     [key: string]: any
 }
 

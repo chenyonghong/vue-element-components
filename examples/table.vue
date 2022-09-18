@@ -44,10 +44,6 @@
                 </template>
             </el-table-column>
         </template>
-
-        <!-- <template #columns="scope">
-      <el-table-column label="Name" prop="name" />
-    </template> -->
     </ve-table>
 </template>
 <script setup lang="ts">
@@ -93,28 +89,6 @@ const config = {
     api: { url: '/api/table/getData', method: 'get' },
     pagination: true
 }
-const tableData = [
-    {
-        date: "2016-05-03",
-        name: "Tom",
-        address: "No. 189, Grove St, Los Angeles",
-    },
-    {
-        date: "2016-05-02",
-        name: "Tom",
-        address: "No. 189, Grove St, Los Angeles",
-    },
-    {
-        date: "2016-05-04",
-        name: "Tom",
-        address: "No. 189, Grove St, Los Angeles",
-    },
-    {
-        date: "2016-05-01",
-        name: "Tom",
-        address: "No. 189, Grove St, Los Angeles",
-    },
-];
 const columns = [
     {
         type: "index",
@@ -195,13 +169,6 @@ const columns = [
     },
 ];
 const table = ref();
-// onMounted(() => {
-//   const data1 = table.value;
-
-//   console.log(data1);
-
-//   table.value?.tableEl?.toggleRowSelection(data1, undefined);
-// });
 watch(
     () => table.value?.loading,
     (n, o) => {

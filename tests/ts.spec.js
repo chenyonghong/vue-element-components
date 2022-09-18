@@ -1,6 +1,6 @@
 
 import { formatNumber, handleTelReg, YangHuiSanJiao } from '/@/utils/test'
-import { isNullable, _filterObj } from "/@/utils/index";
+import { isNullable, _filterObj, deepClone } from "/@/utils/index";
 
 // test('格式化数字99999显示为99,999', () => {
 //     expect(formatNumber('99999')).toBe('99,999');
@@ -18,5 +18,6 @@ import { isNullable, _filterObj } from "/@/utils/index";
 // })
 
 test('过滤对象属性：', () => {
-    expect(_filterObj({ a: 1, b: 2, c: 3}, 'exclude', 'a', 'c')).toEqual({b:2})
+    expect(deepClone({ a: 1, b: 2, c: 3 })).toEqual({ a: 1, b: 2, c: 3 })
+    // expect(deepClone({ a: 1, b: 2, c: 3 })).toBe({ a: 1, b: 2, c: 3 })
 })

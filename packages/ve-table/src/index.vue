@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ve-form ref="searchForm" v-if="filters.length" :config="props.config.filter" :fields="filters" :model="filterModel"
+    <ve-form ref="searchForm" v-if="filters.length" :config="props.config.filter" :fields="filters"
       :style="{ ...props.config.filter.style || searchFormStyle}">
       <template #footer>
         <slot name="filter-footer">
@@ -103,30 +103,29 @@ function handleCurrentChange(val: number) {
 }
 
 // 搜索条件表单
+const searchForm = ref();
 const { columns } = useAttrs();
+// 带有过滤条件的列
 const filters = (columns as any[]).filter(c => c.filter).map(c => ({ prop: c.prop, label: c.label, ...c.filter }));
-const filterKeys = filters.map(f => f.prop);
-const filterKVMap: Record<string, any> = {};
-filterKeys.forEach(fk => {
-  filterKVMap[fk as string] = ''
-})
-const filterModel = reactive({
-  ...filterKVMap
-})
+
+// default form's style
 const searchFormStyle = {
   margin: '10px 0 30px 0',
   padding: '10px 20px 0 20px',
   border: '1px solid #dcdfe6',
   borderRadius: '4px',
 }
+
+// search event
 const handleSearch = ()=> {
   params.value.pageNum = 1;
+  const filterModel = searchForm.value?.model;
+  console.log(filterModel)
   params.value = {...params.value, ...filterModel};
 }
+// reset event
 const handleReset = ()=> {
-  Reflect.ownKeys(filterModel).forEach(key=> {
-    filterModel[key as string] = ''
-  })
+  searchForm.value.reset();
   handleSearch();
 }
 </script>

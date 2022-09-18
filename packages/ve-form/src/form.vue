@@ -53,7 +53,6 @@ const formModel = inject('formModel');
 const onSubmit = () => {
     console.log('submit')
 }
-console.log(formModel)
 
 // form 实例
 const formInstance = ref<FormInstance>();
@@ -62,8 +61,6 @@ const setInstance: (arg: InstanceType<typeof ElForm>) => void = inject('setInsta
 onMounted(() => {
     setInstance(formInstance.value!)
 })
-
-console.log('fc: ', footerCol)
 </script>
 <style>
 .el-row {

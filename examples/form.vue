@@ -1,5 +1,5 @@
 <template>
-    <ve-form ref="form" :config="config" :fields="fields" :model="model">
+    <ve-form ref="form" :config="config" :fields="fields">
         <template #header>
             <h3 style="text-align: left">测试表单</h3>
         </template>
@@ -155,11 +155,13 @@ const fields = [
         }
     }
 ]
+
+//model 可以设置默认也可以不设置，不设置将会以fileds中配置的数据自动设置默认值，获取数据见下
 const model = reactive({
-    name: '',
+    name: 'c',
     age: 0,
     sex: 1,
-    like: []
+    like: [2]
 })
 
 const form = ref();
@@ -167,6 +169,7 @@ const getFormModel = () => {
     // console.log(form.value.formEl);
     form.value.formEl.validate((isValid: boolean)=> {
         console.log(isValid)
+        console.log(form.value.model)
     })
 }
 </script>

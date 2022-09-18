@@ -6,4 +6,5 @@ export declare interface IFormField {
     value?: unknown;
     col?: Record<string, unknown>;
     rule?: any[];
+    [key: string]: unknown
 }

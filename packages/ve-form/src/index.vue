@@ -6,16 +6,18 @@
                 <slot name="footer"></slot>
             </template>
         </form-entry>
-       
-        <!-- <slot v-if="!defaultConfig.footerCol" name="footer" /> -->
+
+        <slot v-if="!defaultConfig.footerCol" name="footer" />
     </div>
 </template>
-<script setup lang="ts" name="VeForm">
+<script setup lang="ts" name="VeForm" scoped>
 import { ElForm } from 'element-plus';
-import { getCurrentInstance, getCurrentScope, useSlots, ref, toRefs, PropType, useAttrs, provide } from 'vue';
-    import FormEntry from "./form.vue";
+import { getCurrentInstance, reactive, useSlots, ref, toRefs, PropType, onMounted, onBeforeUnmount, provide } from 'vue';
+import FormEntry from "./form.vue";
 import { IFormConfig } from "./types/form";
 import { IFormField } from "./types/form-field";
+import useInitFormModel from "./hooks/useInitFormModel";
+import { deepClone } from "pkg/utils";
 
 const props = defineProps({
     config: {
@@ -28,33 +30,39 @@ const props = defineProps({
         default: []
     },
     model: {
-        type: Object as PropType<Record<string|number, any>>,
-        default: {}
+        type: Object as PropType<Record<string | number, any>>,
+        default: null
     }
 })
 
-const { config, fields, model } = toRefs(props);
+let { config, fields, model } = props;
 
 const instance = getCurrentInstance();
 const { globalProperties } = instance!.appContext.config;
 
 // 合并全局配置
-const defaultConfig: IFormConfig = config.value
+const defaultConfig: IFormConfig = config
 const { form: gConfig } = globalProperties.vec_config ?? {};
 if (gConfig) {
-    for(let key in gConfig) {
-        if(!defaultConfig[key]) {
+    for (let key in gConfig) {
+        if (!defaultConfig[key]) {
             defaultConfig[key] = gConfig[key]
         }
     }
 }
-provide<Record<string|number, unknown>>('formModel', model.value)
 
+// 初始化model(调用组件没传model时使用)
+if (!model || Reflect.ownKeys(model).length === 0) {
+    model = reactive({})
+    useInitFormModel(model, fields);
+}
+
+provide<Record<string | number, unknown>>('formModel', model)
 
 const slots = useSlots();
 // const fieldKeys = Object.keys(slots).filter(key=> key.startsWith('field-')).map(key=> key.slice(6));
 const fieldSlots: Record<string, any> = {};
-for(let slotKey in slots) {
+for (let slotKey in slots) {
     if (slotKey.startsWith('field-')) {
         fieldSlots[slotKey.slice(6)] = slots[slotKey]
     }
@@ -62,13 +70,17 @@ for(let slotKey in slots) {
 provide('fieldSlots', fieldSlots)
 
 let formEl = ref<InstanceType<typeof ElForm>>();
-provide('setInstance', (instance: InstanceType<typeof ElForm>)=> {
+provide('setInstance', (instance: InstanceType<typeof ElForm>) => {
     formEl.value = instance;
 })
 defineExpose({
     model,
-    formEl
+    formEl,
+    reset: () => useInitFormModel(model, fields)
 })
 
-console.log("dc: ", defaultConfig)
+// onBeforeUnmount(() => {
+//     console.log('unMounted!!')
+//     model = {};
+// })
 </script>

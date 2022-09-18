@@ -28,7 +28,7 @@ const props = defineProps({
     }
 })
 
-// 初始化input组件属性,去除空属性ks
+// 初始化input组件属性,去除空属性
 // const { refProps } = useInitFieldAttrs(props, inputAttrs)
 
 const formModel = inject<Record<string | number, any>>('formModel')!
