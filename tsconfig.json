@@ -6,6 +6,8 @@
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -13,9 +15,9 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]     //格式一定要写对符号*不能少不然找不到@或者没有代码提示
+      "@/*": ["./packages/*"]     //格式一定要写对符号*不能少不然找不到@或者没有代码提示
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["packages/**/*.ts", "packages/**/*.d.ts", "packages/**/*.tsx", "packages/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

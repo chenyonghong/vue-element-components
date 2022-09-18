@@ -4,6 +4,7 @@ import vue from "@vitejs/plugin-vue";
 import { viteMockServe } from "vite-plugin-mock";
 import VueSetupExtend from "vite-plugin-vue-setup-extend";
 import { resolve } from "path";
+// import STL from "style-resources-loader";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +16,13 @@ export default defineConfig({
     }),
     vueJsx(),
     VueSetupExtend(),
+    // new STL({
+    //   preProcessor: "less",
+    //   patterns: [
+    //     // 存放less变量文件的路径
+    //     resolve(__dirname, "./src/assets/less/parameter.less")
+    //   ]
+    // })
   ],
   resolve: {
     alias: {
@@ -22,7 +30,14 @@ export default defineConfig({
       pkg: "/packages",
     },
   },
-
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+        // additionalData: `@import "${resolve(__dirname, 'src/styles/common.less')}"`
+      }
+    }
+  },
   build: {
     outDir: "lib",
     lib: {
@@ -41,7 +56,6 @@ export default defineConfig({
           "element-plus": "element-plus",
         },
       },
-      exclude: ["public"],
     }, // rollup打包配置
   },
 });

@@ -74,7 +74,7 @@ provide("methods", {
 });
 
 defineExpose({
-  el_table: instance,
+  tableEl: instance,
   selections,
   loading,
 });

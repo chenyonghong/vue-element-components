@@ -1,3 +1,5 @@
+import { log } from "./message";
+
 // 判断具体类型
 function _typeof(content: any): string {
     return Object.prototype.toString.call(content).slice(8, -1).toLowerCase();
@@ -41,9 +43,41 @@ function isNullable(content: any): boolean {
     }
     return ret;
 }
+// 字符串首字母大写
+function _capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+// 根据键名重新构造对象
+function _filterObj(obj: Record<string | number, unknown>, mode: 'include'|'exclude' = 'include', ...props: string[]) {
+    let ret: Record<string | number, unknown> = {};
+    let keys: string[] = [];
+    let primitiveKeys: string[] = Reflect.ownKeys(obj) as string[];
+
+    if(mode==='exclude') {
+        keys = primitiveKeys;
+    }
+    for(let key of props) {
+        if (!primitiveKeys.includes(key)) {
+            log(`${key}不存在对象${obj.toString()}中`)
+            continue
+        }
+        if(mode==='include') {
+            keys.push(key)
+        } else if(mode === 'exclude') {
+            keys = keys.filter(pKey => pKey !== key)
+        }
+    }
+    keys.forEach(key => {
+        ret[key as string] = obj[key as string]
+    })
+    return ret
+}
 
 export {
     isArray,
     isNullableArray,
-    isNullable
+    isNullable,
+    _capitalize,
+    _filterObj
 }

@@ -28,3 +28,23 @@ export const formatNumber = (value: string) => {
 
     return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
 }
+
+// 杨辉三角
+export const YangHuiSanJiao = (value: number) => {
+    if(value < 1) return [];
+    let ret = new Array();
+    ret.push([1]);
+    let i = 1;
+    while(i < value) {
+        const prev: number[] = ret[i-1];
+        let current: number[] = [];
+        let last: number = prev.reduce((p: number,c: number)=> {
+            current.push(p+c);
+            return c;
+        }, 0)
+        current.push(last);
+        ret.push(current);
+        i++;
+    }
+    return ret;
+}
