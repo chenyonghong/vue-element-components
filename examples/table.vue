@@ -1,7 +1,6 @@
 
 <template>
-    <ve-table ref="table" :config="{ api: { url: '/api/table/getData', method: 'get' }, pagination: true }"
-        :columns="columns" stripe border style="width: 100%">
+    <ve-table ref="table" :config="config" :columns="columns" stripe border style="width: 100%;">
         <template #left>
             <el-table-column type="expand" fixed>
                 <template #default="props">
@@ -55,16 +54,44 @@
 import { ref, onMounted, watch, watchEffect, nextTick } from "vue";
 import { VeTable } from "../packages";
 import type { TableColumnCtx } from "element-plus/es/components/table/src/table-column/defaults";
+
+// 性别选项
+const genderOptions = [{
+    id: 1,
+    name: '男'
+}, {
+    id: 2,
+    name: '女'
+}]
 interface User {
     name: string;
     phone: string;
-    gender: string;
+    gender: number;
     age: number;
     province: string;
     city: string;
     district: string;
     address: string;
     detail: string;
+}
+const config = {
+    filter: {
+        labelPosition: 'left',
+        grid: {
+            row: {
+                gutter: 20
+            },
+            col: {
+                span: 6
+            }
+        },
+        footerCol: {
+            span: 12,
+            textAlign: 'right'
+        }
+    },
+    api: { url: '/api/table/getData', method: 'get' },
+    pagination: true
 }
 const tableData = [
     {
@@ -103,6 +130,10 @@ const columns = [
         label: "姓名",
         width: 80,
         fixed: true,
+        filter: {
+            type: 'input',
+            placeholder: '请输入姓名'
+        }
     },
     {
         prop: "phone",
@@ -114,6 +145,15 @@ const columns = [
         label: "性别",
         width: 80,
         sortable: "",
+        filter: {
+            type: 'select',
+            clearable: true,
+            placeholder: '请选择性别',
+            options: genderOptions.map(gender => ({ value: gender.id, label: gender.name }))
+        },
+        formatter: (row: User, column: TableColumnCtx<User>) => {
+            return genderOptions.filter(g => g.id === row.gender)[0].name;
+        },
     },
     {
         prop: "age",
@@ -154,7 +194,6 @@ const columns = [
         },
     },
 ];
-
 const table = ref();
 // onMounted(() => {
 //   const data1 = table.value;
@@ -168,11 +207,13 @@ watch(
     (n, o) => {
         if (!n && o) {
             nextTick(() => {
-                const data1 = table.value?.tableEl?.data[1];
+                const data1 = table.value?.tableEl?.data.filter(d=> d.name.includes('马'));
 
                 console.log(data1);
+                data1.forEach(row=> {
 
-                table.value?.tableEl?.toggleRowSelection(data1, undefined);
+                    table.value?.tableEl?.toggleRowSelection(row, undefined);
+                })
             });
         }
     }

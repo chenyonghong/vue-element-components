@@ -63,6 +63,7 @@ const handleRoute = (menu)=> {
 
 .content-wrapper {
   flex: 1;
+  // background-color: gray;
 }
 </style>
 

@@ -5,6 +5,9 @@
             <el-col v-bind="field.col || grid.col" v-for="field in fields" v-show="!field.hidden">
                 <form-item-wrapper :field="field" />
             </el-col>
+            <el-col v-if="footerCol" v-bind="footerCol" :style="{ textAlign: footerCol.textAlign || 'center'}">
+                <slot name="footer-button" />
+            </el-col>
         </el-row>
         <template v-else>
             <form-item-wrapper v-for="field in fields" :config="config" :field="field" v-show="!field.hidden" />
@@ -32,7 +35,7 @@ const props = defineProps({
 
 const { config, fields } = toRefs(props);
 
-const { apis, grid, ...innerConfig } = config.value;
+const { apis, grid, footerCol, ...innerConfig } = config.value;
 
 const rules = ref<Record<string, any[]>>({});
 fields.value.forEach(field => {
@@ -55,10 +58,12 @@ console.log(formModel)
 // form 实例
 const formInstance = ref<FormInstance>();
 
-const setInstance: (arg: InstanceType<typeof ElForm>)=> void = inject('setInstance')!
+const setInstance: (arg: InstanceType<typeof ElForm>) => void = inject('setInstance')!
 onMounted(() => {
     setInstance(formInstance.value!)
 })
+
+console.log('fc: ', footerCol)
 </script>
 <style>
 .el-row {

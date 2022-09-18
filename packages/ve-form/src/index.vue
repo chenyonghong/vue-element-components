@@ -1,8 +1,13 @@
 <template>
     <div>
         <slot name="header" />
-        <form-entry :config="defaultConfig" :fields="fields"  />
-        <slot name="footer" />
+        <form-entry :config="defaultConfig" :fields="fields">
+            <template #footer-button v-if="defaultConfig.footerCol">
+                <slot name="footer"></slot>
+            </template>
+        </form-entry>
+       
+        <!-- <slot v-if="!defaultConfig.footerCol" name="footer" /> -->
     </div>
 </template>
 <script setup lang="ts" name="VeForm">
@@ -15,7 +20,8 @@ import { IFormField } from "./types/form-field";
 const props = defineProps({
     config: {
         type: Object as PropType<IFormConfig>,
-        default: {}
+        default: {
+        }
     },
     fields: {
         type: Array as PropType<IFormField[]>,
@@ -33,7 +39,7 @@ const instance = getCurrentInstance();
 const { globalProperties } = instance!.appContext.config;
 
 // 合并全局配置
-const defaultConfig: Record<string|number, any> = config.value
+const defaultConfig: IFormConfig = config.value
 const { form: gConfig } = globalProperties.vec_config ?? {};
 if (gConfig) {
     for(let key in gConfig) {
@@ -42,7 +48,6 @@ if (gConfig) {
         }
     }
 }
-
 provide<Record<string|number, unknown>>('formModel', model.value)
 
 
@@ -64,4 +69,6 @@ defineExpose({
     model,
     formEl
 })
+
+console.log("dc: ", defaultConfig)
 </script>

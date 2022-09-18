@@ -4,7 +4,9 @@ export interface IFormConfig {
     apis?: IApi[],
     grid?: Record<string, any>,
     rules?: Record<string, any[]>,
-    instance?: any
+    instance?: any,
+    footerCol: any,
+    [key: string]: any
 }
 
 export interface IFormData {

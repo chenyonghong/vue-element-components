@@ -8,13 +8,16 @@ export declare interface IApi {
 
 export declare interface IConfig {
     api?: IApi | Function,
+    pagination?: boolean,
+    filter?: any
 }
 
 export declare type IData<T> = T
 
 export interface IReq {
-    page?: number,
-    size?: number
+    pageNum?: number,
+    pagesize?: number,
+    [key?: string]: any
 }
 export interface IRes {
   data: TTableData;

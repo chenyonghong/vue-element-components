@@ -1,24 +1,23 @@
 <template>
   <div>
+    <ve-form ref="searchForm" v-if="filters.length" :config="props.config.filter" :fields="filters" :model="filterModel"
+      :style="{ ...props.config.filter.style || searchFormStyle}">
+      <template #footer>
+        <slot name="filter-footer">
+          <el-button type="warning" @click="handleReset">重置</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
+        </slot>
+      </template>
+
+    </ve-form>
     <table-core ref="tableRef" :data="data?.data" v-bind="$attrs" :loading="loading">
-      <template
-        v-for="(item, key, index) in $slots"
-        :key="index"
-        v-slot:[key]="slotScope"
-      >
+      <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="slotScope">
         <slot :name="key" v-bind="slotScope"></slot>
       </template>
     </table-core>
-    <el-pagination
-      v-if="!isNullable(props.config.pagination)"
-      v-model:currentPage="currentPage"
-      :page-size="100"
-      layout="total, prev, pager, next, jumper, sizes"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      style="margin: 10px; float: right"
-    />
+    <el-pagination v-if="!isNullable(props.config.pagination)" v-model:currentPage="params.pageNum" :page-size="params.pageSize"
+      layout="total, prev, pager, next, jumper, sizes" :total="total" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" style="margin: 10px; float: right" />
   </div>
 </template>
 <script setup lang="ts" name="VeTable">
@@ -36,9 +35,11 @@ import {
   computed,
   useSlots,
   nextTick,
+  useAttrs
 } from "vue";
 import tableCore from "./table.vue";
-import { TTableData, ExposeAttrs } from "./types/table.d";
+import VeForm from 'pkg/ve-form';
+import { TTableData, ExposeAttrs, IColumn } from "./types/table.d";
 import { IConfig, IRes, IReq } from "./types/common.d";
 import { ElTable } from "element-plus";
 import { isNullable } from "pkg/utils";
@@ -54,9 +55,16 @@ const props = defineProps({
     type: Object as PropType<IRes>,
     default: {},
   },
+  // columns: {
+  //   type: Array as PropType<IColumn<TTableData>[]>,
+  //   default: [],
+  // },
 });
-const params = ref<IReq>({});
-const { data, loading } = useInitData({ ...props, params });
+const params = ref<IReq>({
+  pageNum: 1,
+  pageSize: 10
+});
+const { data, loading } = useInitData({ ...props, data: null, params });
 
 // 暴露数据和api
 const tableRef = ref<ExposeAttrs<TTableData>>();
@@ -80,17 +88,45 @@ defineExpose({
 });
 
 // 分页
-const currentPage = ref(0);
+// const currentPage = ref(0);
 const total = computed(() => {
   return data.value?.total || data.value?.data.length || 0;
 });
 
 function handleSizeChange(val: number) {
   console.log("size: ", val);
-  params.value.size = val;
+  params.value.pageSize = val;
 }
 function handleCurrentChange(val: number) {
-  console.log("currentPage: ", val);
-  params.value.page = val;
+  // console.log("currentPage: ", val);
+  params.value.pageNum = val;
+}
+
+// 搜索条件表单
+const { columns } = useAttrs();
+const filters = (columns as any[]).filter(c => c.filter).map(c => ({ prop: c.prop, label: c.label, ...c.filter }));
+const filterKeys = filters.map(f => f.prop);
+const filterKVMap: Record<string, any> = {};
+filterKeys.forEach(fk => {
+  filterKVMap[fk as string] = ''
+})
+const filterModel = reactive({
+  ...filterKVMap
+})
+const searchFormStyle = {
+  margin: '10px 0 30px 0',
+  padding: '10px 20px 0 20px',
+  border: '1px solid #dcdfe6',
+  borderRadius: '4px',
+}
+const handleSearch = ()=> {
+  params.value.pageNum = 1;
+  params.value = {...params.value, ...filterModel};
+}
+const handleReset = ()=> {
+  Reflect.ownKeys(filterModel).forEach(key=> {
+    filterModel[key as string] = ''
+  })
+  handleSearch();
 }
 </script>
