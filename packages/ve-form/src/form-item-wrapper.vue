@@ -40,7 +40,7 @@ export default defineComponent({
         return () => (
             <el-form-item label={label} prop={prop}>
                 {
-                    () => h(baseControls[compType], { ...field.value }, slots)
+                    () => h(baseControls[compType], { compType, ...field.value }, slots)
                 }
             </el-form-item>
 

@@ -1,15 +1,18 @@
 <template>
   <div>
-    <ve-form ref="searchForm" v-if="filters.length" :config="props.config.filter" :fields="filters"
-      :style="{ ...props.config.filter.style || searchFormStyle}">
-      <template #footer>
-        <slot name="filter-footer">
-          <el-button type="warning" @click="handleReset">重置</el-button>
-          <el-button type="primary" @click="handleSearch">查询</el-button>
-        </slot>
-      </template>
-
-    </ve-form>
+    <slot name="table-header">
+      <ve-form ref="searchForm" v-if="filters.length" :config="props.config.filter" :fields="filters"
+        :style="{ ...props.config.filter.style || searchFormStyle}">
+        <template #footer>
+          <slot name="filter-buttons">
+            <el-button type="warning" @click="handleReset">重置</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
+          </slot>
+        </template>
+      
+      </ve-form>
+    </slot>
+    
     <table-core ref="tableRef" :data="data?.data" v-bind="$attrs" :loading="loading">
       <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="slotScope">
         <slot :name="key" v-bind="slotScope"></slot>
@@ -85,6 +88,8 @@ defineExpose({
   tableEl: instance,
   selections,
   loading,
+  handleSearch,
+  handleReset
 });
 
 // 分页
@@ -117,14 +122,14 @@ const searchFormStyle = {
 }
 
 // search event
-const handleSearch = ()=> {
+function handleSearch() {
   params.value.pageNum = 1;
   const filterModel = searchForm.value?.model;
   console.log(filterModel)
   params.value = {...params.value, ...filterModel};
 }
 // reset event
-const handleReset = ()=> {
+function handleReset() {
   searchForm.value.reset();
   handleSearch();
 }

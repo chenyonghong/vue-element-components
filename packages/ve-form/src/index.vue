@@ -1,13 +1,13 @@
 <template>
     <div>
         <slot name="header" />
-        <form-entry :config="defaultConfig" :fields="fields">
-            <template #footer-button v-if="defaultConfig.footerCol">
+        <form-entry :config="mergedConfig" :fields="fields">
+            <template #footer-button v-if="mergedConfig.footerCol">
                 <slot name="footer"></slot>
             </template>
         </form-entry>
 
-        <slot v-if="!defaultConfig.footerCol" name="footer" />
+        <slot v-if="!mergedConfig.footerCol" name="footer" />
     </div>
 </template>
 <script setup lang="ts" name="VeForm" scoped>
@@ -18,11 +18,13 @@ import { IFormConfig } from "./types/form";
 import { IFormField } from "./types/form-field";
 import useInitFormModel from "./hooks/useInitFormModel";
 import { deepClone } from "pkg/utils";
+import { IGlobalProperty } from './types/common';
 
 const props = defineProps({
     config: {
         type: Object as PropType<IFormConfig>,
         default: {
+            
         }
     },
     fields: {
@@ -37,16 +39,23 @@ const props = defineProps({
 
 let { config, fields, model } = props;
 
+const defaultConfig = {
+    defaultPhr: {
+        show: true,
+        showPropName: true,
+    },
+}
+
 const instance = getCurrentInstance();
 const { globalProperties } = instance!.appContext.config;
 
 // 合并全局配置
-const defaultConfig: IFormConfig = config
+const mergedConfig: IFormConfig = Object.assign(defaultConfig, config)
 const { form: gConfig } = globalProperties.vec_config ?? {};
 if (gConfig) {
     for (let key in gConfig) {
-        if (!defaultConfig[key]) {
-            defaultConfig[key] = gConfig[key]
+        if (!mergedConfig[key]) {
+            mergedConfig[key] = gConfig[key]
         }
     }
 }
@@ -57,7 +66,8 @@ if (!model || Reflect.ownKeys(model).length === 0) {
     useInitFormModel(model, fields);
 }
 
-provide<Record<string | number, unknown>>('formModel', model)
+provide<IGlobalProperty>('globalProperties', { model, config: mergedConfig })
+// provide<Record<string | number, unknown>>('globalConfig', model)
 
 const slots = useSlots();
 // const fieldKeys = Object.keys(slots).filter(key=> key.startsWith('field-')).map(key=> key.slice(6));

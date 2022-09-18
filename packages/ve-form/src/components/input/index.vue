@@ -1,5 +1,5 @@
 <template>
-    <el-input v-model="formModel[props.prop as string]" v-bind="attrs">
+    <el-input v-model="formModel[props.prop as string]" :placeholder="placeholder" v-bind="attrs">
         <template #prepend v-if="slots.prepend">
             <slot name="prepend"></slot>
         </template>
@@ -16,9 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, defineProps, useAttrs, inject, useSlots } from "vue";
+import { ref, defineProps, useAttrs, inject, useSlots } from "vue";
 import { inputAttrs } from "./attrs";
-import useInitFieldAttrs from "../../hooks/useInitFieldAttrs";
+import useInitFieldPhr from "../../hooks/useInitFieldPhr";
+import { IGlobalProperty } from "../../types/common";
 
 // const props = defineProps({...inputAttrs})
 const props = defineProps({
@@ -31,9 +32,12 @@ const props = defineProps({
 // 初始化input组件属性,去除空属性
 // const { refProps } = useInitFieldAttrs(props, inputAttrs)
 
-const formModel = inject<Record<string | number, any>>('formModel')!
+const { model: formModel } = inject<IGlobalProperty>('globalProperties')!
 
 const attrs = useAttrs();
+
+// 设置默认占位符
+const placeholder = useInitFieldPhr();
 
 const slots = useSlots();
 </script>

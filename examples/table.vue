@@ -1,6 +1,13 @@
 
 <template>
     <ve-table ref="table" :config="config" :columns="columns" stripe border style="width: 100%;">
+        <template #filter-buttons>
+            <el-button type="warning" @click="table.handleReset()">重置</el-button>
+            <el-button type="primary" @click="table.handleSearch()">查询</el-button>
+        </template>
+        <!-- <template #table-header>
+            <p>自定义表头内容</p>
+        </template> -->
         <template #left>
             <el-table-column type="expand" fixed>
                 <template #default="props">
@@ -71,18 +78,20 @@ interface User {
     detail: string;
 }
 const config = {
+    // filter 搜索条件表单，配置同form config
     filter: {
         labelPosition: 'left',
+        labelSuffix: '：',
         grid: {
             row: {
                 gutter: 20
             },
             col: {
-                span: 6
+                span: 8
             }
         },
         footerCol: {
-            span: 12,
+            span: 6,
             textAlign: 'right'
         }
     },
@@ -106,7 +115,7 @@ const columns = [
         fixed: true,
         filter: {
             type: 'input',
-            placeholder: '请输入姓名'
+            // placeholder: '请输入姓名222'
         }
     },
     {
@@ -119,10 +128,17 @@ const columns = [
         label: "性别",
         width: 80,
         sortable: "",
+        // 搜索项配置，同form-fields
         filter: {
             type: 'select',
             clearable: true,
-            placeholder: '请选择性别',
+            placeholder: '请选择性别222',
+            col: {
+                span: 10,
+            },
+            style: {
+                width: '100%'
+            },
             options: genderOptions.map(gender => ({ value: gender.id, label: gender.name }))
         },
         formatter: (row: User, column: TableColumnCtx<User>) => {

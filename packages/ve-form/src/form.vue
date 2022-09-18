@@ -21,6 +21,7 @@ import { IFormField } from "./types/form-field";
 import formItemWrapper from "./form-item-wrapper.vue";
 import { _filterObj } from "pkg/utils";
 import type { ElForm, FormInstance, FormRules } from 'element-plus'
+import { IGlobalProperty } from "./types/common";
 
 const props = defineProps({
     config: {
@@ -48,7 +49,7 @@ fields.value.forEach(field => {
 innerConfig.rules = rules.value;
 
 // 初始化formModel
-const formModel = inject('formModel');
+const { model: formModel } = inject<IGlobalProperty>('globalProperties')!;
 
 const onSubmit = () => {
     console.log('submit')

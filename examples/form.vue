@@ -36,6 +36,11 @@ import { Calendar, Search } from '@element-plus/icons-vue'
 console.log(VeForm)
 const config = reactive({
     labelPosition: 'top',
+    // 默认占位符
+    defaultPhr: {
+        show: true,
+        showPropName: false,
+    },
     grid: {
         row: {
             gutter: 20

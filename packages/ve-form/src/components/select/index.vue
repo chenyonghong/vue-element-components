@@ -1,7 +1,9 @@
 
 <script lang="tsx">
-import { defineComponent, PropType, defineProps, toRefs, useAttrs, inject, h, Events } from "vue";
+import { defineComponent, PropType, ref, toRefs, useAttrs, inject, h, Events } from "vue";
 import { _capitalize } from "pkg/utils";
+import { IGlobalProperty } from "../../types/common";
+import useInitFieldPhr from "../../hooks/useInitFieldPhr";
 
 interface Group {
     label: string,
@@ -39,7 +41,10 @@ export default defineComponent({
     },
     setup(props, { attrs, slots }) {
         const { prop, group, options, events } = toRefs(props);
-        const formModel = inject<Record<string | number, any>>('formModel')!
+        const { model: formModel, config } = inject<IGlobalProperty>('globalProperties')!
+        
+        // 设置默认占位符
+        const placeholder = useInitFieldPhr();
 
         const OptionTag = (options: Option[]) => (
             options.map((option: Option) => (
@@ -64,7 +69,7 @@ export default defineComponent({
         }
 
         return () => (
-            <el-select v-model={formModel[prop.value]} {...attrs} {...fomattedEvents}>
+            <el-select v-model={formModel[prop.value]} placeholder={placeholder.value} {...attrs} {...fomattedEvents}>
                 {group.value ? GroupTag() : OptionTag(options.value as Option[])}
             </el-select>
         )
