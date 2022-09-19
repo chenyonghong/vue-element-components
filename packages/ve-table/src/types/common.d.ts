@@ -1,7 +1,7 @@
 export declare type TMethod = 'get' | 'post' | 'put' | 'option' | 'delete'
 export declare interface IApi {
     url: string,
-    method: method,
+    method: TMethod,
     params?: string,
     data?: unknown
 }
@@ -16,8 +16,8 @@ export declare type IData<T> = T
 
 export interface IReq {
     pageNum?: number,
-    pagesize?: number,
-    [key?: string]: any
+    pageSize?: number,
+    [key: string]: any
 }
 export interface IRes {
   data: TTableData;
