@@ -198,6 +198,9 @@ const data = [
     detail: "a sexy man",
   },
 ]
+data.forEach((item,index)=> {
+  (item as any).id = ++index;
+})
 export default [
   {
     url: "/api/table/getData", // 注意，这里只能是string格式

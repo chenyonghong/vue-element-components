@@ -1,0 +1,11 @@
+{
+    "table": {
+        "row-key": "id"
+    },
+    "form": {
+        "defaultPhr": {
+            "show": true,
+            "showPropName": true
+        }
+    }
+}

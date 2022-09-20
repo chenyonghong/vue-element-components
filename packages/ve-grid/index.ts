@@ -1,6 +1,6 @@
 import { App } from "vue";
 import VeGrid from "./src/index.vue";
-import { initConfig } from "pkg/utils/initial";
+import { initConfig } from "@/utils/initial";
 
 VeGrid.install = function (app: App, config: Record<string, any>) {
     // 初始化配置

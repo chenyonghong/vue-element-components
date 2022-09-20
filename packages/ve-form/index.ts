@@ -1,5 +1,5 @@
 import VeForm from "./src/index.vue";
-import { initConfig } from "pkg/utils/initial";
+import { initConfig } from "@/utils/initial";
 
 VeForm.install = function (app, config) {
     // 初始化配置

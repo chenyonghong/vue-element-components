@@ -1,7 +1,7 @@
 
 <script lang="tsx">
 import { defineComponent, PropType, ref, toRefs, useAttrs, inject, h, Events } from "vue";
-import { _capitalize } from "pkg/utils";
+import { _capitalize } from "@/utils";
 import { IGlobalProperty } from "../../types/common";
 import useInitFieldPhr from "../../hooks/useInitFieldPhr";
 

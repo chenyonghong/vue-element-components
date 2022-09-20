@@ -17,8 +17,9 @@ import FormEntry from "./form.vue";
 import { IFormConfig } from "./types/form";
 import { IFormField } from "./types/form-field";
 import useInitFormModel from "./hooks/useInitFormModel";
-import { deepClone } from "pkg/utils";
+import { deepClone } from "@/utils";
 import { IGlobalProperty } from './types/common';
+import useInitConfig from "@/hooks/useInitConfig";
 
 const props = defineProps({
     config: {
@@ -39,26 +40,7 @@ const props = defineProps({
 
 let { config, fields, model } = props;
 
-const defaultConfig = {
-    defaultPhr: {
-        show: true,
-        showPropName: true,
-    },
-}
-
-const instance = getCurrentInstance();
-const { globalProperties } = instance!.appContext.config;
-
-// 合并全局配置
-const mergedConfig: IFormConfig = Object.assign(defaultConfig, config)
-const { form: gConfig } = globalProperties.vec_config ?? {};
-if (gConfig) {
-    for (let key in gConfig) {
-        if (!mergedConfig[key]) {
-            mergedConfig[key] = gConfig[key]
-        }
-    }
-}
+const mergedConfig = useInitConfig('form', config)
 
 // 初始化model(调用组件没传model时使用)
 if (!model || Reflect.ownKeys(model).length === 0) {
@@ -67,10 +49,8 @@ if (!model || Reflect.ownKeys(model).length === 0) {
 }
 
 provide<IGlobalProperty>('globalProperties', { model, config: mergedConfig })
-// provide<Record<string | number, unknown>>('globalConfig', model)
 
 const slots = useSlots();
-// const fieldKeys = Object.keys(slots).filter(key=> key.startsWith('field-')).map(key=> key.slice(6));
 const fieldSlots: Record<string, any> = {};
 for (let slotKey in slots) {
     if (slotKey.startsWith('field-')) {
@@ -88,9 +68,4 @@ defineExpose({
     formEl,
     reset: () => useInitFormModel(model, fields)
 })
-
-// onBeforeUnmount(() => {
-//     console.log('unMounted!!')
-//     model = {};
-// })
 </script>

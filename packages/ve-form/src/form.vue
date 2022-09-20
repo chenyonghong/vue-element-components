@@ -19,7 +19,7 @@ import { defineProps, toRefs, PropType, ref, inject, onMounted } from "vue";
 import { IFormConfig } from "./types/form";
 import { IFormField } from "./types/form-field";
 import formItemWrapper from "./form-item-wrapper.vue";
-import { _filterObj } from "pkg/utils";
+import { _filterObj } from "@/utils";
 import type { ElForm, FormInstance, FormRules } from 'element-plus'
 import { IGlobalProperty } from "./types/common";
 

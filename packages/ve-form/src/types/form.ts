@@ -1,4 +1,4 @@
-import { IApi } from "@/pkg/types/network";
+import { IApi } from "@/types/network";
 
 export interface IFormConfig {
     apis?: IApi[],

@@ -5,11 +5,16 @@
             <el-button type="warning" @click="table.handleReset()">重置</el-button>
             <el-button type="primary" @click="table.handleSearch()">查询</el-button>
         </template>
+        <template #prepend>
+            <div style="padding: 10px; text-align: left">
+                <el-button type="danger" @click="handleBatchDelete">批量删除</el-button>
+            </div>
+        </template>
         <!-- <template #table-header>
             <p>自定义表头内容</p>
         </template> -->
         <template #left>
-            <el-table-column type="expand" fixed>
+            <el-table-column type="expand" fixed label="展开" width="100">
                 <template #default="props">
                     <div m="4">
                         <p m="t-0 b-2">State: {{ props.row.province }}</p>
@@ -96,22 +101,27 @@ const config = {
         }
     },
     api: { url: '/api/table/getData', method: 'get' },
-    pagination: true
+    pagination: true,
+    "row-key": 'id',
+    // 'show-summary': true
 }
 const columns = [
     {
         type: "index",
+        label: '序号',
         fixed: "",
+        width: 80
     },
     {
         type: "selection",
         width: 55,
         fixed: "",
+        crossPage: true, // 跨页多选
     },
     {
         prop: "name",
         label: "姓名",
-        width: 80,
+        width: 150,
         fixed: true,
         filter: {
             type: 'input',
@@ -152,7 +162,7 @@ const columns = [
     },
     {
         label: "地址",
-        width: 380,
+        // width: 380,
         children: [
             {
                 prop: "province",
@@ -178,34 +188,22 @@ const columns = [
     {
         prop: "detail",
         label: "描述",
-        width: 280,
+        // width: 280,
         formatter: (row: User, column: TableColumnCtx<User>) => {
             return "p:" + row.detail;
         },
     },
 ];
 const table = ref();
-watch(
-    () => table.value?.loading,
-    (n, o) => {
-        if (!n && o) {
-            nextTick(() => {
-                const data1 = table.value?.tableEl?.data.filter(d=> d.name.includes('马'));
 
-                console.log(data1);
-                data1.forEach(row=> {
-
-                    table.value?.tableEl?.toggleRowSelection(row, undefined);
-                })
-            });
-        }
-    }
-);
 function handleEdit(i, row) {
     console.log(i, row);
 }
 function handleDelete(i, row) {
     console.log(i, row);
+}
+function handleBatchDelete() {
+    console.log('选择删除的数据为: ', table.value?.selections)
 }
 </script>
 
