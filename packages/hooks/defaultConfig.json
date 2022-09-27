@@ -1,6 +1,18 @@
 {
     "table": {
-        "row-key": "id"
+        "row-key": "id",
+        "filter": {
+            "style": {
+                "margin": "10px 0 30px 0",
+                "padding": "10px 20px 0 20px",
+                "border": "1px solid #dcdfe6",
+                "borderRadius": "4px"
+            }
+        },
+        "pagination": {
+            "layout": "total, prev, pager, next, jumper, sizes",
+            "style": "margin: 10px; float: right"
+        }
     },
     "form": {
         "defaultPhr": {

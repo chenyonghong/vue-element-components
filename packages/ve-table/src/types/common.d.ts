@@ -6,9 +6,14 @@ export declare interface IApi {
     data?: unknown
 }
 
+export declare interface IPagination {
+    layout?: string,
+    style?: string
+}
+
 export declare interface IConfig {
     api?: IApi | Function,
-    pagination?: boolean,
+    pagination?: IPagination,
     filter?: any
 }
 

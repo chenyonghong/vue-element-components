@@ -1,8 +1,8 @@
 <template>
   <div>
     <slot name="table-header">
-      <ve-form ref="searchForm" v-if="filters.length" :config="filter" :fields="filters"
-        :style="{ ...filter.style || searchFormStyle}">
+      <ve-form ref="searchForm" v-if="filters.length" :config="_filterObj(filter, 'exclude', 'style')" :fields="filters"
+        :style="filter?.style">
         <template #footer>
           <slot name="filter-buttons">
             <el-button type="warning" @click="handleReset">重置</el-button>
@@ -13,14 +13,14 @@
       </ve-form>
     </slot>
     <slot name="prepend"></slot>
-    <table-core ref="tableRef" :data="data?.data" :columns="columns" :loading="loading" v-bind="mergedConfig">
+    <table-core ref="tableRef" :data="data?.data" :columns="columns" :loading="loading" v-bind="innerConfig">
       <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="slotScope">
         <slot :name="key" v-bind="slotScope"></slot>
       </template>
     </table-core>
-    <el-pagination v-if="!isNullable(props.config.pagination)" v-model:currentPage="params.pageNum"
-      :page-size="params.pageSize" layout="total, prev, pager, next, jumper, sizes" :total="total"
-      @size-change="handleSizeChange" @current-change="handleCurrentChange" style="margin: 10px; float: right" />
+    <el-pagination v-if="!isNullable(pagination)" v-model:currentPage="params.pageNum" :page-size="params.pageSize"
+      :layout="pagination?.layout" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :style="pagination?.style" />
   </div>
 </template>
 <script setup lang="ts" name="VeTable">
@@ -45,8 +45,9 @@ import VeForm from '@/ve-form';
 import { TTableData, ExposeAttrs, IColumn } from "./types/table.d";
 import { IConfig, IRes, IReq } from "./types/common.d";
 import { ElTable } from "element-plus";
-import { isNullable } from "@/utils";
+import { isNullable, _filterObj } from "@/utils";
 import useInitConfig from "@/hooks/useInitConfig";
+import { IFormField } from "@/ve-form/src/types/form-field";
 
 const props = defineProps({
   config: {
@@ -65,8 +66,9 @@ const props = defineProps({
   // },
 });
 
-const { filter, pagination, ...config } = props.config;
-const mergedConfig = useInitConfig('table', config)
+const mergedConfig = useInitConfig('table', props.config);
+const { filter, pagination, ...innerConfig } = mergedConfig;
+debugger;
 const { columns } = useAttrs() as { columns: IColumn<TTableData>[] };
 
 const params = ref<IReq>({
@@ -80,7 +82,7 @@ const tableRef = ref<ExposeAttrs<TTableData>>();
 const instance = ref<InstanceType<typeof ElTable>>();
 
 // *******多选start
-const selectionCol = columns!.find(col=> col.type==='selection');
+const selectionCol = columns!.find(col => col.type === 'selection');
 const selections = ref<TTableData>([]); // 选择结果
 const selectionSet = ref(new Set()); // 选择结果Set结构，用于跨页多选场景去重
 
@@ -89,7 +91,7 @@ let initFinished = false;
 /*
   @desc: el-table的selection-change回调
   @params: 
-    slts: 选择的数据（el-table的selections)
+    slts: 选择的数据(el-table的selections)
 */
 function handleSelectionChange(slts: TTableData) {
   // 单页模式
@@ -183,15 +185,7 @@ function handleCurrentChange(val: number) {
 // 搜索条件表单
 const searchForm = ref();
 // 带有过滤条件的列
-const filters = columns.filter(c => c.filter).map(c => ({ prop: c.prop, label: c.label, ...c.filter }));
-
-// default form's style
-const searchFormStyle = {
-  margin: '10px 0 30px 0',
-  padding: '10px 20px 0 20px',
-  border: '1px solid #dcdfe6',
-  borderRadius: '4px',
-}
+const filters: IFormField[] = columns.filter(c => c.filter).map(c => ({ prop: c.prop, label: c.label, ...c.filter }) as IFormField);
 
 // search event
 function handleSearch() {

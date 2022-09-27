@@ -101,7 +101,7 @@ const config = {
         }
     },
     api: { url: '/api/table/getData', method: 'get' },
-    pagination: true,
+    // pagination: true,
     "row-key": 'id',
     // 'show-summary': true
 }

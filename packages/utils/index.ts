@@ -5,6 +5,10 @@ function _typeof(content: any): string {
     return Object.prototype.toString.call(content).slice(8, -1).toLowerCase();
 }
 
+const isPlainObject = obj => {
+    return _typeof(obj) === 'object'
+}
+
 // 判断是否是数组
 function isArray(ret: any): boolean {
     return Array.isArray(ret);
@@ -108,6 +112,34 @@ function deepClone(obj: Record<string, any> = {}, map = new Map()) {
     // 返回结果
     return result;
 }
+function assignDeep(target: any, ...extraData: any[]) {
+    const args = deepClone(Array.from(extraData));
+    if (!args.length) return target;
+    let result = target;
+    args.forEach(item => {
+        if (isPlainObject(item)) {
+            if (!isPlainObject(result)) result = {}
+            for (let key in item) {
+                if (result[key] && (isPlainObject(item[key]) || item[key] instanceof Array)) {
+                    result[key] = assignDeep(result[key], item[key])
+                } else {
+                    result[key] = item[key]
+                }
+            }
+        }
+        else if (item instanceof Array) {
+            if (!(result instanceof Array)) result = []
+            item.forEach((arrItem, arrIndex) => {
+                if (isPlainObject(arrItem)) {
+                    result[arrIndex] = assignDeep(result[arrIndex])
+                } else {
+                    result[arrIndex] = arrItem
+                }
+            })
+        }
+    })
+    return result;
+}
 
 export {
     isArray,
@@ -115,5 +147,6 @@ export {
     isNullable,
     _capitalize,
     _filterObj,
-    deepClone
+    deepClone,
+    assignDeep
 }
